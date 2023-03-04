@@ -30,5 +30,5 @@ public interface ReportDataService {
     String getExtensions(String fileName);
 
     void uploadReportData(Long id, byte[] fileContent, File file, String caption, String fullPathPhoto,
-                          String habits, String pathPhoto, Date dateSendMessage, long timeDate, long daysOfReports);
+                          Date dateSendMessage, long timeDate, Object daysOfReports);
 }

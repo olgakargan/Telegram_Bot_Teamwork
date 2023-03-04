@@ -1,5 +1,7 @@
 package pro.sky.telegrambotteamwork.constants;
 
+import pro.sky.telegrambotteamwork.serviceImpl.ReportDataService;
+
 /**
  * Класс, с константными переменными
  */
@@ -23,5 +25,8 @@ public class UserRequestConstant {
     public static final String TAKE_A_PET_FROM_A_SHELTER = "Как взять питомца из приюта";
     public static final String PET_REPORT = "Прислать отчет о питомце";
     public static final String CALL_A_VOLUNTEER = "Позвать волонтера";
-
+    
+    public static Object daysOfReports;
+    public static ReportDataService reportDataService;
+    public static String REGEXE_MESSAG;
 }
