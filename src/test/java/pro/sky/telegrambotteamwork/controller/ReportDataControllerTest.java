@@ -28,7 +28,7 @@ class ReportDataControllerTest {
     @MockBean
     private ReportDataService reportDataService;
 
-    @Test
+    @Test //загрузить отчет
     void downloadReport() throws Exception {
         String ration = "good ration";
         String health = "health";
@@ -45,11 +45,11 @@ class ReportDataControllerTest {
         verify(reportDataService).findById(1L);
     }
 
-    @Test
+    @Test //загрузить фотографию из Базы данных
     void downloadPhotoFromDataBase() throws Exception {
-        String fileType = "image/jpeg";
+        String fileType = "image/png";
         ReportData reportData = new ReportData();
-        InputStream is = getClass().getClassLoader().getResourceAsStream("pet.jpeg");
+        InputStream is = getClass().getClassLoader().getResourceAsStream("pet.png");
         byte[] data = Objects.requireNonNull(is).readAllBytes();
         reportData.setData(data);
 
@@ -62,9 +62,9 @@ class ReportDataControllerTest {
         verify(reportDataService).findById(1L);
     }
 
-    @Test
+    @Test //тестовая загрузка Аватара из Файла
     void testDownloadAvatarFromFile() throws Exception {
-        String fileType = "image/jpeg";
+        String fileType = "image/png";
         ReportData reportData = new ReportData();
         reportData.setFilePath("src/test/java/pro.sky.telegrambotteamwork.controller/pet.png");
 

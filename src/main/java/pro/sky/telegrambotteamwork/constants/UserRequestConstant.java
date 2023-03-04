@@ -1,6 +1,5 @@
 package pro.sky.telegrambotteamwork.constants;
 
-
 /**
  * Класс, с константными переменными
  */
@@ -18,6 +17,7 @@ public class UserRequestConstant {
     public static final String REASONS_FOR_REFUSAL = "Бот может выдать список причин, почему могут отказать и не дать забрать собаку из приюта. ";
     // Команды боту
     public static final String START = "/start";
+    public static final String ERROR_MESSAGE = "Извини, я ограничен в ответах, напиши /start - для начала работы";
     public static final String MENU = "/menu";
     public static final String INFORMATION_ABOUT_THE_SHELTER = "Узнать информацию о приюте";
     public static final String TAKE_A_PET_FROM_A_SHELTER = "Как взять питомца из приюта";

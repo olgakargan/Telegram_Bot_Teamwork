@@ -86,4 +86,9 @@ public class ReportDataServiceImpl implements ReportDataService {
         logger.info("Was invoked method to getExtensions");
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
+
+    @Override
+    public void uploadReportData(Long id, byte[] fileContent, File file, String caption, String fullPathPhoto, String habits, String pathPhoto, Date dateSendMessage, long timeDate, long daysOfReports) {
+
+    }
 }

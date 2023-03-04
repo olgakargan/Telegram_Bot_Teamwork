@@ -1,6 +1,4 @@
 package pro.sky.telegrambotteamwork.listeners;
-
-
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
@@ -10,10 +8,10 @@ import com.pengrad.telegrambot.response.SendResponse;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.model.User;
 import pro.sky.telegrambotteamwork.repository.UserRepository;
-
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -29,7 +27,6 @@ import static pro.sky.telegrambotteamwork.constants.UserRequestConstant.*;
 public class TelegramBotUpdatesListener implements UpdatesListener {
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     private final TelegramBot telegramBot;
-
     private final UserRepository userRepository;
 
     /**
@@ -108,5 +105,4 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     public void sendMessage(long chatId, String message) {
         SendResponse sendResponse = telegramBot.execute(new SendMessage(chatId, message));
     }
-
 }

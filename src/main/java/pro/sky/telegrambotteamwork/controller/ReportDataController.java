@@ -72,5 +72,5 @@ public class ReportDataController {
         telegramBotUpdatesListener.sendMessage(chat_Id, message);
     }
 
-    private int port;
+
 }
