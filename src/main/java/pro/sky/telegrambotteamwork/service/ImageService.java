@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pro.sky.telegrambotteamwork.model.Cat;
 import pro.sky.telegrambotteamwork.model.Dog;
 import pro.sky.telegrambotteamwork.model.Image;
-import pro.sky.telegrambotteamwork.model.Pet;
+import pro.sky.telegrambotteamwork.model.ReportData;
 import pro.sky.telegrambotteamwork.repository.ImageRepository;
 
 import javax.imageio.ImageIO;
@@ -55,7 +55,7 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final DogService dogService;
     private final CatService catService;
-    private final PetService petService;
+    private final ReportDataService reportDataService;
 
     /**
      * Метод загрузки фотографий для питомцев
@@ -65,10 +65,10 @@ public class ImageService {
      * @throws IOException общий класс исключений ввода-вывода
      */
     public void uploadImage(Long id, MultipartFile imageFile) throws IOException {
-        logger.info("Вызван метод загрузки фотографии для животных. Идентификатор: {}", id);
+        logger.info("Вызван метод загрузки фотографии для животных и загрузки отчетов от пользователей. Идентификатор: {}", id);
         Dog dog = dogService.findDog(id);
         Cat cat = catService.findCat(id);
-        Pet pet = petService.findPet(id);
+        ReportData reportData = reportDataService.findReportData(id);
         Path filePath = Path.of(imagesDir, id + "." + getExtensions(imageFile.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
@@ -98,14 +98,14 @@ public class ImageService {
             imageCat.setBytes(generateImageData(filePath));
             imageRepository.save(imageCat);
             logger.info("Вы добавили фотографию для кошки!");
-        } else if (pet != null) {
-            Image imagePet = imageRepository.findByPetId(id).orElseGet(Image::new);
-            imagePet.setPet(pet);
-            imagePet.setFilePath(filePath.toString());
-            imagePet.setMediaType(imageFile.getContentType());
-            imagePet.setBytes(generateImageData(filePath));
-            imageRepository.save(imagePet);
-            logger.info("Вы добавили фотографию для питомца!");
+        } else if (reportData != null) {
+            Image imageReportData = imageRepository.findByReportDataId(id).orElseGet(Image::new);
+            imageReportData.setReportData(reportData);
+            imageReportData.setFilePath(filePath.toString());
+            imageReportData.setMediaType(imageFile.getContentType());
+            imageReportData.setBytes(generateImageData(filePath));
+            imageRepository.save(imageReportData);
+            logger.info("Вы добавили фотографию для отчета!");
         }
     }
 

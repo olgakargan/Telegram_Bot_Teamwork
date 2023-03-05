@@ -29,6 +29,4 @@ public class Image {
     private Cat cat;
     @OneToOne(mappedBy = "imageDog")
     private Dog dog;
-    @OneToOne(mappedBy = "imagePet")
-    private Pet pet;
 }
