@@ -1,10 +1,6 @@
 package pro.sky.telegrambotteamwork.constants;
 
-<<<<<<< HEAD
-import pro.sky.telegrambotteamwork.serviceImpl.ReportDataService;
-=======
 import java.util.List;
->>>>>>> origin/dev
 
 /**
  * Класс, с константными переменными
@@ -35,19 +31,12 @@ public class UserRequestConstant {
     public static final String TAKE_A_PET_FROM_A_SHELTER = "Как взять питомца из приюта";
     public static final String PET_REPORT = "Прислать отчет о питомце";
     public static final String CALL_A_VOLUNTEER = "Позвать волонтера";
-<<<<<<< HEAD
-    
-    public static Object daysOfReports;
-    public static ReportDataService reportDataService;
-    public static String REGEXE_MESSAG;
-}
-=======
     public static final String SUBSCRIBE = "Подписаться";
 
     public static final String ABOUT_OUR_NURSERY = "О нашем питомнике";
     public static final String AMBULANCE_FOR_ANIMALS = "Скорая помощь для животных";
-    public static final String INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE = "Инструкция по вызову скорой помощи";
-    public static final String REHABILITATION_FOR_SPECIAL_ANIMALS = "Реабилитация для особенных животных";
+    public static final String INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE = "Скорой помощь для питомца";
+    public static final String REHABILITATION_FOR_SPECIAL_ANIMALS = "Реабилитация для питомца";
     public static final String REQUISITES = "Реквизиты";
     public static final String CONTACTS = "Контакты";
     public static final List<String> MAIN_MENU = List.of(
@@ -67,4 +56,3 @@ public class UserRequestConstant {
     );
 
 }
->>>>>>> origin/dev
