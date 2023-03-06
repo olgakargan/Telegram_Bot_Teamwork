@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambotteamwork.model.Pet;
-import pro.sky.telegrambotteamwork.repository.PetRepository;
 import pro.sky.telegrambotteamwork.service.PetService;
 
 
@@ -18,12 +17,9 @@ import pro.sky.telegrambotteamwork.service.PetService;
 @Tag(name = "Работа с животными", description = "Позволяет управлять населением питомника")
 public class PetController {
     private final PetService petService;
-    private final PetRepository petRepository;
 
-    public PetController(PetService petService,
-                         PetRepository petRepository) {
+    public PetController(PetService petService) {
         this.petService = petService;
-        this.petRepository = petRepository;
     }
 
     @Operation(
@@ -52,7 +48,7 @@ public class PetController {
     )
     @PostMapping
     public HttpStatus updatePet(@RequestBody Pet pet) {
-        if (!petRepository.findAll().contains(pet)) {
+        if (!petService.findAll().contains(pet)) {
             return HttpStatus.NOT_FOUND;
         }
         petService.updatePet(pet);

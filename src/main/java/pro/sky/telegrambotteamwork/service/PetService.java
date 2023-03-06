@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.model.Pet;
 import pro.sky.telegrambotteamwork.repository.PetRepository;
 
+import java.util.Collection;
+
 @Service
 public class PetService {
     private final Logger logger = LoggerFactory.getLogger(PetService.class);
@@ -23,5 +25,9 @@ public class PetService {
     public Pet updatePet(Pet pet) {
         logger.info("Was invoked method for update pet");
         return petRepository.save(pet);
+    }
+
+    public Collection<Pet> findAll() {
+        return petRepository.findAll();
     }
 }

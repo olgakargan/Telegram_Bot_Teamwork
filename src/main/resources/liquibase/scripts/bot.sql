@@ -9,6 +9,7 @@ CREATE TABLE notification_task
     timeDate CHARACTER
 );
 
+<<<<<<< HEAD
 --changeset sbukaevsky:2
 CREATE TABLE users
 (
@@ -51,3 +52,5 @@ CREATE TABLE pet
     year_of_birth   INT,
     description     TEXT
 )
+=======
+>>>>>>> origin/dev

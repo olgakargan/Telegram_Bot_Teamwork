@@ -1,6 +1,7 @@
 package pro.sky.telegrambotteamwork;
 
 
+
 import net.minidev.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,6 +29,8 @@ class TelegramBotTeamworkApplicationWithMockTest {
     private MockMvc mockMvc;
     @MockBean
     private PetRepository petRepository;
+    @SpyBean
+    private PetService petService;
     @InjectMocks
     private PetController petController;
 
