@@ -31,4 +31,6 @@ public interface ReportDataService {
 
     void uploadReportData(Long id, byte[] fileContent, File file, String caption, String fullPathPhoto,
                           Date dateSendMessage, long timeDate, Object daysOfReports);
+
+    void uploadReportData(Long id, byte[] fileContent, File file, String caption, String fullPathPhoto, java.sql.Date dateSendMessage, long timeDate, long daysOfReports);
 }

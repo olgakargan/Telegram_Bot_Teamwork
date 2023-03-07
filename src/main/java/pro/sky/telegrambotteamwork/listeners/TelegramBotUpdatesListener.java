@@ -60,53 +60,45 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     @Override
     public int process(List<Update> updates) {
-        try {
-            updates.forEach(update -> {
-                logger.info("Запрос от пользователя: {}", update);
-                Message messageUser = update.message();
+        updates.forEach(update -> {
+            logger.info("Запрос от пользователя: {}", update);
+            Message messageUser = update.message();
 
-                if (hasMessage(update)) {
-                    if (hasText(update)) {
-                        if (START.equals(messageUser.text())) {
-                            telegramBot.execute(loadingTheMenu(messageUser, WELCOME_MESSAGE, MAIN_MENU));
-                        }
-                    }
-                } else if (hasCallbackQuery(update)) {
-                    if (INFORMATION_ABOUT_THE_SHELTER.contains(update.callbackQuery().data())) {
-                        telegramBot.execute(loadingTheMenuCallbackQuery(update, "Подробная информация о нашем приюте для бездомных животных. Выберите, нужную для вас информацию.", INFORMATION_MENU));
-                        logger.info("Первая кнопка нажата!");
-                    } else if (TAKE_A_PET_FROM_A_SHELTER.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Здесь будет информация как взять питомца из приюта"));
-                    } else if (PET_REPORT.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Здесь будет информация о том, как прислать отчет о питомце"));
-                    } else if (CALL_A_VOLUNTEER.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Здесь будет информация о том, как позвать волонтера"));
-                    } else if (SUBSCRIBE.equals(update.callbackQuery().data())) {
-                        if (hasMessage(update) && hasContact(update)) {
-                            saveUser(update);
-                        }
+            if (hasMessage(update)) {
+                if (START.equals(messageUser.text())) {
+                    telegramBot.execute(loadingTheMenu(messageUser, "Здравствуйте " + messageUser.chat().username() + "! " + WELCOME_MESSAGE, MAIN_MENU));
+                }
+            } else if (hasCallbackQuery(update)) {
+                if (INFORMATION_ABOUT_THE_SHELTER.equals(update.callbackQuery().data())) {
+                    telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Здесь будет информация о приюте"));
+                    telegramBot.execute(loadingTheMenuCallbackQuery(update, "Подробная информация о нашем приюте для бездомных животных. Выберите, нужную для вас информацию.", INFORMATION_MENU));
+                } else if (TAKE_A_PET_FROM_A_SHELTER.equals(update.callbackQuery().data())) {
+                    telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Здесь будет информация как взять питомца из приюта"));
+                } else if (PET_REPORT.equals(update.callbackQuery().data())) {
+                    telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Здесь будет информация о том, как прислать отчет о питомце"));
+                } else if (CALL_A_VOLUNTEER.equals(update.callbackQuery().data())) {
+                    telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Здесь будет информация о том, как позвать волонтера"));
+                } else if (SUBSCRIBE.equals(update.callbackQuery().data())) {
+                    if (hasMessage(update) && hasContact(update)) {
+                        saveUser(update);
                     }
                 }
-
-                if (hasCallbackQuery(update)) {
-                    if (ABOUT_OUR_NURSERY.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), ABOUT_OUR_NURSERY_DETAILED));
-                    } else if (AMBULANCE_FOR_ANIMALS.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), AMBULANCE_FOR_ANIMALS_DETAILS));
-                    } else if (INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE_DETAILS));
-                    } else if (REHABILITATION_FOR_SPECIAL_ANIMALS.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REHABILITATION_FOR_SPECIAL_ANIMALS_DETAILS));
-                    } else if (REQUISITES.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REQUISITES_DETAILS));
-                    } else if (CONTACTS.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), CONTACTS_DETAILS));
-                    }
+            } else if (hasMessage(update) && hasCallbackQuery(update)) {
+                if (ABOUT_OUR_NURSERY.equals(update.callbackQuery().data())) {
+                    telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), ABOUT_OUR_NURSERY_DETAILED));
+                } else if (AMBULANCE_FOR_ANIMALS.equals(update.callbackQuery().data())) {
+                    telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), AMBULANCE_FOR_ANIMALS_DETAILS));
+                } else if (INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE.equals(update.callbackQuery().data())) {
+                    telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE_DETAILS));
+                } else if (REHABILITATION_FOR_SPECIAL_ANIMALS.equals(update.callbackQuery().data())) {
+                    telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REHABILITATION_FOR_SPECIAL_ANIMALS_DETAILS));
+                } else if (REQUISITES.equals(update.callbackQuery().data())) {
+                    telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REQUISITES_DETAILS));
+                } else if (CONTACTS.equals(update.callbackQuery().data())) {
+                    telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), CONTACTS_DETAILS));
                 }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            }
+        });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
@@ -167,7 +159,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      * @param listOfButton список кнопок
      * @return Отправленное новое сообщение от бота
      */
-    public SendMessage loadingTheMenu(Message message, String messageText, List<String> listOfButton) {
+    private SendMessage loadingTheMenu(Message message, String messageText, List<String> listOfButton) {
         Keyboard keyboard = keyboardGeneration(listOfButton);
         return new SendMessage(message.chat().id(), messageText).replyMarkup(keyboard);
     }
@@ -224,24 +216,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private boolean hasText(Update update) {
         return update.message().text() != null;
     }
-
-    /**
-     * Этот метод проверяет есть ли сообщение от пользователя, через нажатие кнопки
-     *
-     * @param update входящее обновление
-     * @return Возвращает true, если сообщение от пользователя, через нажатие кнопки
-     */
-    private boolean hasMessageCallbackQuery(Update update) {
-        return update.callbackQuery().message() != null;
-    }
-
-    public void sendMessage(long chatId, String text) {
-        SendMessage message = new SendMessage(chatId, text);
-        telegramBot.execute(message);
-    }
     private static final String REGEX_MESSAGE = "(Рацион:)(\\s)(\\W+)(;)\n" +
             "(Самочувствие:)(\\s)(\\W+)(;)\n" +
             "(Поведение:)(\\s)(\\W+)(;)";
+
     public void getReport(Update update, ReportDataService reportDataService, long daysOfReports) {
         Pattern pattern = Pattern.compile(REGEX_MESSAGE);
         Matcher matcher = pattern.matcher(update.message().caption());
@@ -291,6 +269,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             }
 
         }
+
     }
 
+    public void sendMessage(Long chat_id, String message) {
+    }
 }

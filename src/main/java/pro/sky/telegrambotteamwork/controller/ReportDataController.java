@@ -11,21 +11,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambotteamwork.listeners.TelegramBotUpdatesListener;
 import pro.sky.telegrambotteamwork.model.ReportData;
-import pro.sky.telegrambotteamwork.serviceImpl.ReportDataServiceImpl;
+import pro.sky.telegrambotteamwork.serviceImpl.ReportDataService;
 
 import java.util.Collection;
+
 
 @RestController
 @RequestMapping("photoReports")
 public class ReportDataController {
 
-    private final ReportDataServiceImpl reportDataService;
+    private final ReportDataService reportDataService;
     @Autowired
     private TelegramBotUpdatesListener telegramBotUpdatesListener;
 
-    private final String fileType = "image/png";
+    private final String fileType = "image/jpeg";
 
-    public ReportDataController(ReportDataServiceImpl reportDataService) {
+    public ReportDataController(ReportDataService reportDataService) {
         this.reportDataService = reportDataService;
     }
 
@@ -47,7 +48,7 @@ public class ReportDataController {
         return ResponseEntity.ok(reportDataService.getAll());
     }
 
-    @Operation(summary = "Просмотр фото по Id отчета")
+    @Operation(summary = "Просмотр фото по айди отчета")
     @GetMapping("/{id}/photo-from-db")
     public ResponseEntity<byte[]> downloadPhotoFromDB(@PathVariable Long id) {
         ReportData reportData = reportDataService.findById(id);
@@ -59,18 +60,14 @@ public class ReportDataController {
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(reportData.getData());
     }
 
-    @Operation(summary = "Отправить сообщение пользователю", description = "Написать сообщение определенному пользователю." +
-            "Например связался с волонтерами по номеру")
+    @Operation(summary = "Отправить сообщение пользователю", description = "Тут можно написать любое сообщение определенному пользователю." +
+            "Например сообщение о том, чтобы правильно заполнял форму отчета. Либо связался с волонтерами по номеру")
     @GetMapping("message-to-person")
-
-    public void sendMessageToPerson(@Parameter(description = "id чат с пользователем", example = "123456789")
+    public void sendMessageToPerson(@Parameter(description = "айди чата с пользователем", example = "3984892310")
                                     @RequestParam Long chat_Id,
                                     @Parameter(description = "Ваше сообщение")
                                     @RequestParam String message) {
-
-
         telegramBotUpdatesListener.sendMessage(chat_Id, message);
     }
-
 
 }

@@ -91,4 +91,9 @@ public class ReportDataServiceImpl implements ReportDataService {
     public void uploadReportData(Long id, byte[] fileContent, File file, String caption, String fullPathPhoto, Date dateSendMessage, long timeDate, Object daysOfReports) {
 
     }
+
+    @Override
+    public void uploadReportData(Long id, byte[] fileContent, File file, String caption, String fullPathPhoto, java.sql.Date dateSendMessage, long timeDate, long daysOfReports) {
+
+    }
 }
