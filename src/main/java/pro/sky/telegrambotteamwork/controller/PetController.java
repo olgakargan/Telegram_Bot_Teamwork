@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambotteamwork.model.Pet;
@@ -13,14 +13,11 @@ import pro.sky.telegrambotteamwork.service.PetService;
 
 
 @RestController
-@RequestMapping("api/pet")
+@RequestMapping("/api/pet")
 @Tag(name = "Работа с животными", description = "Позволяет управлять населением питомника")
+@AllArgsConstructor
 public class PetController {
     private final PetService petService;
-
-    public PetController(PetService petService) {
-        this.petService = petService;
-    }
 
     @Operation(
             summary = "Приём животного в приют",
@@ -31,10 +28,9 @@ public class PetController {
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = Pet.class))
     )
-    @PutMapping
-    public HttpStatus registerPet(@RequestBody Pet pet) {
-        petService.addNew(pet);
-        return HttpStatus.OK;
+    @PostMapping
+    public Pet addPet(@RequestBody Pet pet) {
+        return petService.addPet(pet);
     }
 
     @Operation(
@@ -46,12 +42,13 @@ public class PetController {
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = Pet.class))
     )
-    @PostMapping
-    public HttpStatus updatePet(@RequestBody Pet pet) {
-        if (!petService.findAll().contains(pet)) {
-            return HttpStatus.NOT_FOUND;
-        }
-        petService.updatePet(pet);
-        return HttpStatus.OK;
+    @PutMapping
+    public Pet updatePet(@RequestBody Pet pet) {
+        return petService.updatePet(pet);
+    }
+
+    @GetMapping("/{id}")
+    public Pet findPet(@PathVariable Long id) {
+        return petService.findPet(id);
     }
 }

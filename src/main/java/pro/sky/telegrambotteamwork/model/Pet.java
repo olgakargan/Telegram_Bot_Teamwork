@@ -1,20 +1,21 @@
 package pro.sky.telegrambotteamwork.model;
 
+
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
 /**
  * Класс с сущностью домашнего питомца
  */
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @Table(name = "pet")
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Pet {
 
     @Id
@@ -24,7 +25,7 @@ public class Pet {
     private Long id;
     @Schema(description = "Кличка", example = "Бобик")
     @Column(name = "pet_name")
-    private String pet_name;
+    private String petName;
     @Schema(description = "Порода", example = "Колли")
     @Column(name = "breed")
     private String breed;

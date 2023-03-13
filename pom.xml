@@ -42,6 +42,11 @@
 		<scope>test</scope>
 	</dependency>
 	<dependency>
+		<groupId>org.springdoc</groupId>
+		<artifactId>springdoc-openapi-ui</artifactId>
+		<version>1.6.13</version>
+	</dependency>
+	<dependency>
 		<groupId>com.github.pengrad</groupId>
 		<artifactId>java-telegram-bot-api</artifactId>
 		<version>5.7.0</version>
@@ -76,9 +81,8 @@
 	<plugins>
 		<plugin>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-maven-plugin</artifactId>
+			<artifactId><![CDATA[spring-boot-maven-plugin]]></artifactId>
 		</plugin>
 	</plugins>
 </build>
-
 </project>

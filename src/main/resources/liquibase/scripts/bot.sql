@@ -51,3 +51,5 @@ CREATE TABLE pet
     year_of_birth   INT,
     description     TEXT
 )
+=======
+>>>>>>> origin/dev
