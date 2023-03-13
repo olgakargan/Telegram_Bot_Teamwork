@@ -1,22 +1,23 @@
 package pro.sky.telegrambotteamwork.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import pro.sky.telegrambotteamwork.enums.Role;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Класс с сущностью пользователя ботом
  */
-@Getter
-@Setter
-@EqualsAndHashCode
-@NoArgsConstructor
+@Data
 @Table(name = "users")
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue
@@ -36,5 +37,18 @@ public class User {
     private Long chatId;
     @Column(name = "date_time")
     private LocalDateTime dateTime;
+    @ElementCollection(targetClass = Role.class)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Set<Role> roles = new HashSet<>();
 
+    public User(Long id, String firstName, String lastName, String userName, String phone, Long userId, Long chatId) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userName = userName;
+        this.phone = phone;
+        this.userId = userId;
+        this.chatId = chatId;
+    }
 }

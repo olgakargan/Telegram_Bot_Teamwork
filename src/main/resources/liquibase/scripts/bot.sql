@@ -26,3 +26,23 @@ create table reportData
     lastMessage date                not null,
     data        bytea               not null
 );
+
+--changeset sbukaevsky:10
+CREATE TABLE cats
+(
+    id            BIGINT,
+    cat_name      TEXT,
+    breed         TEXT,
+    year_of_birth INTEGER,
+    description   TEXT
+);
+
+--changeset sbukaevsky:11
+CREATE TABLE dogs
+(
+    id            BIGINT,
+    dog_name      TEXT,
+    breed         TEXT,
+    year_of_birth INTEGER,
+    description   TEXT
+);

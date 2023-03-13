@@ -48,7 +48,7 @@ class TelegramBotTeamworkApplicationWithMockTest {
 
         Pet pet = new Pet();
         pet.setId(id);
-        pet.setPet_name(pet_name);
+//        pet.setPet_name(pet_name);
         pet.setBreed(breed);
         pet.setYearOfBirth(yearOfBirth);
         pet.setDescription(description);
@@ -80,7 +80,7 @@ class TelegramBotTeamworkApplicationWithMockTest {
 
         Pet pet = new Pet();
         pet.setId(id);
-        pet.setPet_name(pet_name);
+//        pet.setPet_name(pet_name);
         pet.setBreed(breed);
         pet.setYearOfBirth(yearOfBirth);
         pet.setDescription(description);

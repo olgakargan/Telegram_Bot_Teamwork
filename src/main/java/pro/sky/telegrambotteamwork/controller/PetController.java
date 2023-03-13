@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +17,11 @@ import java.util.Collection;
 import java.util.Collections;
 
 @RestController
-@RequestMapping("api/pet")
+@RequestMapping("/api/pet")
 @Tag(name = "Работа с животными", description = "Позволяет управлять населением питомника")
+@AllArgsConstructor
 public class PetController {
     private final PetService petService;
-
-    public PetController(PetService petService) {
-        this.petService = petService;
-    }
 
     @Operation(
             summary = "Приём животного в приют",

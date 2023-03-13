@@ -1,11 +1,11 @@
 package pro.sky.telegrambotteamwork.serviceImpl;
 
+import com.pengrad.telegrambot.model.File;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import com.pengrad.telegrambot.model.File;
 import pro.sky.telegrambotteamwork.exception.ReportDataNotFoundException;
 import pro.sky.telegrambotteamwork.model.ReportData;
 import pro.sky.telegrambotteamwork.repository.ReportDataRepository;
@@ -21,7 +21,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
 public class ReportDataServiceImpl implements ReportDataService {
     private final ReportDataRepository reportRepository;
 

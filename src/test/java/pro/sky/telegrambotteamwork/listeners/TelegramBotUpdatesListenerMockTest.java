@@ -16,7 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 
-import static pro.sky.telegrambotteamwork.constants.UserRequestConstant.START;
+import static pro.sky.telegrambotteamwork.constants.CommandMessageUserConstant.START;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")

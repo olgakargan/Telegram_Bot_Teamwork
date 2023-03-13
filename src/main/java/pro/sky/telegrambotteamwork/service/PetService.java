@@ -1,5 +1,6 @@
 package pro.sky.telegrambotteamwork.service;
 
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -7,9 +8,11 @@ import pro.sky.telegrambotteamwork.exception.NoEntityException;
 import pro.sky.telegrambotteamwork.model.Pet;
 import pro.sky.telegrambotteamwork.repository.PetRepository;
 
-import java.util.Collection;
-
+/**
+ * Сервис-класс для манипуляций с питомцем
+ */
 @Service
+@AllArgsConstructor
 public class PetService {
     private final Logger logger = LoggerFactory.getLogger(PetService.class);
     private final PetRepository petRepository;

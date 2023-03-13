@@ -3,8 +3,7 @@ package pro.sky.telegrambotteamwork.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.server.LocalServerPort;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,23 +11,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.telegrambotteamwork.listeners.TelegramBotUpdatesListener;
 import pro.sky.telegrambotteamwork.model.ReportData;
-import pro.sky.telegrambotteamwork.serviceImpl.ReportDataServiceImpl;
+import pro.sky.telegrambotteamwork.serviceImpl.ReportDataService;
 
 import java.util.Collection;
 
 @RestController
 @RequestMapping("photoReports")
+@AllArgsConstructor
 public class ReportDataController {
-
-    private final ReportDataServiceImpl reportDataService;
-    @Autowired
+    private final ReportDataService reportDataService;
     private TelegramBotUpdatesListener telegramBotUpdatesListener;
-
     private final String fileType = "image/png";
-
-    public ReportDataController(ReportDataServiceImpl reportDataService) {
-        this.reportDataService = reportDataService;
-    }
 
     @Operation(summary = "Просмотр отчетов по id")
     @GetMapping("/{id}/report")
@@ -63,14 +56,12 @@ public class ReportDataController {
     @Operation(summary = "Отправить сообщение пользователю", description = "Написать сообщение определенному пользователю." +
             "Например связался с волонтерами по номеру")
     @GetMapping("message-to-person")
-
     public void sendMessageToPerson(@Parameter(description = "id чат с пользователем", example = "123456789")
-                                    @RequestParam Long chat_Id,
+                                        @RequestParam Long chatId,
                                     @Parameter(description = "Ваше сообщение")
-                                    @RequestParam String message) {
+                                        @RequestParam String message) {
 
-        telegramBotUpdatesListener.sendMessage(chat_Id, message);
+        telegramBotUpdatesListener.sendMessage(chatId, message);
     }
 
-    private int port;
 }
