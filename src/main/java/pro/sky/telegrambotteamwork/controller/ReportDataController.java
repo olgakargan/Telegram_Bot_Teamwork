@@ -1,67 +1,31 @@
 package pro.sky.telegrambotteamwork.controller;
 
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.sky.telegrambotteamwork.listeners.TelegramBotUpdatesListener;
 import pro.sky.telegrambotteamwork.model.ReportData;
-import pro.sky.telegrambotteamwork.serviceImpl.ReportDataService;
-
-import java.util.Collection;
+import pro.sky.telegrambotteamwork.service.ReportDataService;
 
 @RestController
-@RequestMapping("photoReports")
+@RequestMapping("/api/report-data")
 @AllArgsConstructor
 public class ReportDataController {
     private final ReportDataService reportDataService;
-    private TelegramBotUpdatesListener telegramBotUpdatesListener;
-    private final String fileType = "image/png";
 
-    @Operation(summary = "Просмотр отчетов по id")
-    @GetMapping("/{id}/report")
-    public ReportData downloadReport(@PathVariable Long id) {
-        return reportDataService.findById(id);
+    @PostMapping
+    public ReportData addReportData(@RequestBody ReportData reportData) {
+        return reportDataService.addReportData(reportData);
     }
 
-    @Operation(summary = "Удаление отчетов по id")
+    @GetMapping("/{id}")
+    public ReportData findReportData(@PathVariable Long id) {
+        return reportDataService.findReportData(id);
+    }
+
     @DeleteMapping("/{id}")
-    public void remove(@PathVariable Long id) {
-        reportDataService.remove(id);
-    }
-
-    @Operation(summary = "Просмотр всех отчетов", description = "Просмотр всех отчетов, либо всех отчетов определенного пользователя по chat_id")
-    @GetMapping("getAll")
-    public ResponseEntity<Collection<ReportData>> getAll() {
-        return ResponseEntity.ok(reportDataService.getAll());
-    }
-
-    @Operation(summary = "Просмотр фото по Id отчета")
-    @GetMapping("/{id}/photo-from-db")
-    public ResponseEntity<byte[]> downloadPhotoFromDB(@PathVariable Long id) {
-        ReportData reportData = reportDataService.findById(id);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(fileType));
-        headers.setContentLength(reportData.getData().length);
-
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(reportData.getData());
-    }
-
-    @Operation(summary = "Отправить сообщение пользователю", description = "Написать сообщение определенному пользователю." +
-            "Например связался с волонтерами по номеру")
-    @GetMapping("message-to-person")
-    public void sendMessageToPerson(@Parameter(description = "id чат с пользователем", example = "123456789")
-                                        @RequestParam Long chatId,
-                                    @Parameter(description = "Ваше сообщение")
-                                        @RequestParam String message) {
-
-        telegramBotUpdatesListener.sendMessage(chatId, message);
+    public ResponseEntity<ReportData> deleteReportData(@PathVariable Long id) {
+        reportDataService.deleteReportData(id);
+        return ResponseEntity.ok().build();
     }
 
 }

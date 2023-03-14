@@ -34,4 +34,7 @@ public class Pet {
     @Schema(description = "Описание", example = "Добрый, любит детей")
     @Column(name = "description")
     private String description;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image imagePet;
 }

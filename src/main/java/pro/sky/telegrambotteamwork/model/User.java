@@ -7,6 +7,7 @@ import pro.sky.telegrambotteamwork.enums.Role;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,6 +42,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Set<Role> roles = new HashSet<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Collection<ReportData> reportDataset;
 
     public User(Long id, String firstName, String lastName, String userName, String phone, Long userId, Long chatId) {
         this.id = id;

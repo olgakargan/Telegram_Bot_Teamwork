@@ -45,7 +45,7 @@ public class DogService {
      * Метод поиска собаки в базе данных
      *
      * @param id идентификатор искомой собаки
-     * @return Возвращает найденую собаку
+     * @return Возвращает найденную собаку
      */
     public Dog findDog(Long id) {
         logger.info("Вызван метод поиска собаки по id {}", id);

@@ -6,7 +6,6 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.SendResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,6 +116,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, PET_REPORT_MESSAGE, PET_REPORT_MENU));
         } else if (CALL_A_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CALL_A_VOLUNTEER_MESSAGE, CALL_A_VOLUNTEER_MENU));
+        } else if (GO_BACK_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
         }
     }
 
@@ -134,6 +135,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, PET_REPORT_MESSAGE, PET_REPORT_MENU));
         } else if (CALL_A_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CALL_A_VOLUNTEER_MESSAGE, CALL_A_VOLUNTEER_MENU));
+        } else if (GO_BACK_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
         }
     }
 
@@ -207,16 +210,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (SEND_REPORT.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Прислать отчет о питомце"));
         }
-    }
-
-    /**
-     * Метод выводит сообщения пользователю
-     *
-     * @param chatId идентификатор чата
-     * @param text   текстовое сообщение
-     */
-    public void sendMessage(Long chatId, String text) {
-        SendResponse response = telegramBot.execute(new SendMessage(chatId, text));
     }
 
 }

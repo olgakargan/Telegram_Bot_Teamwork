@@ -46,7 +46,7 @@ public class CatService {
      * Метод поиска кошки в базе данных
      *
      * @param id идентификатор искомой кошки
-     * @return Возвращает найденую кошку
+     * @return Возвращает найденную кошку
      */
     public Cat findCat(Long id) {
         logger.info("Вызван метод поиска кошки по id {}", id);

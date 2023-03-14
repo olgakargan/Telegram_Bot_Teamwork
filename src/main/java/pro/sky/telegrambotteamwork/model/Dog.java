@@ -28,5 +28,8 @@ public class Dog {
     private int yearOfBirth;
     @Column(name = "description")
     private String description;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image imageDog;
 
 }

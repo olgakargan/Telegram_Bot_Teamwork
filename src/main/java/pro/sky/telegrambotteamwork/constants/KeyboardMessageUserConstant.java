@@ -13,18 +13,23 @@ public class KeyboardMessageUserConstant {
     public static final String INFORMATION_ABOUT_THE_SHELTER_DOG = "Узнать информацию о приюте собак";
     public static final String TAKE_A_FROM_A_SHELTER_DOG = "Как взять собаку из приюта";
     public static final String PET_REPORT_DOG = "Прислать отчет о собаке";
-    public static final String CALL_A_VOLUNTEER_DOG = "Позвать волонтера для собак";
+    public static final String CALL_A_VOLUNTEER_DOG = "Позвать волонтера для собаки";
+    public static final String GO_BACK_DOG = "Вернутьcя назад";
     public static final String INFORMATION_ABOUT_THE_SHELTER_CAT = "Узнать информацию о приюте кошек";
     public static final String TAKE_A_FROM_A_SHELTER_CAT = "Как взять кошку из приюта";
     public static final String PET_REPORT_CAT = "Прислать отчет о кошке";
-    public static final String CALL_A_VOLUNTEER_CAT = "Позвать волонтера для кошек";
+    public static final String CALL_A_VOLUNTEER_CAT = "Позвать волонтера для кошки";
+    public static final String GO_BACK_CAT = "Вернуться назад";
     // Кнопки об информации о питомнике
     public static final String ABOUT_OUR_NURSERY = "О нашем питомнике";
     public static final String AMBULANCE_FOR_ANIMALS = "Скорая помощь для животных";
-    public static final String INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE = "Скорой помощь для питомца";
+    public static final String INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE = "Инструкция помощи";
     public static final String REHABILITATION_FOR_SPECIAL_ANIMALS = "Реабилитация для питомца";
+    public static final String SAFETY_PRECAUTIONS = "Техника безопасности";
     public static final String REQUISITES = "Реквизиты";
-    public static final String CONTACTS = "Контакты";
+    public static final String CONTACTS = "Контакты приюта";
+    public static final String SECURITY_CONTACTS = "Контакты охраны";
+    public static final String GO_BACK = "Вернуться назад";
     // Кнопки о том, как взять питомца из приюта
     public static final String ARE_DOGS_IN_SHELTER_HEALTHY = "Здоровье собаки в питомнике";
     public static final String ARE_CATS_IN_SHELTER_HEALTHY = "Здоровье кошки в питомнике";
@@ -55,21 +60,26 @@ public class KeyboardMessageUserConstant {
             INFORMATION_ABOUT_THE_SHELTER_DOG,
             TAKE_A_FROM_A_SHELTER_DOG,
             PET_REPORT_DOG,
-            CALL_A_VOLUNTEER_DOG
+            CALL_A_VOLUNTEER_DOG,
+            GO_BACK_DOG
     );
     public static final List<String> MAIN_CAT_MENU = List.of(
             INFORMATION_ABOUT_THE_SHELTER_CAT,
             TAKE_A_FROM_A_SHELTER_CAT,
             PET_REPORT_CAT,
-            CALL_A_VOLUNTEER_CAT
+            CALL_A_VOLUNTEER_CAT,
+            GO_BACK_CAT
     );
     public static final List<String> INFORMATION_MENU = List.of(
             ABOUT_OUR_NURSERY,
             AMBULANCE_FOR_ANIMALS,
             INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE,
             REHABILITATION_FOR_SPECIAL_ANIMALS,
+            SAFETY_PRECAUTIONS,
             REQUISITES,
-            CONTACTS
+            CONTACTS,
+            SECURITY_CONTACTS,
+            GO_BACK
     );
     public static final List<String> TAKE_A_FROM_A_SHELTER_DOG_MENU = List.of(
             ARE_DOGS_IN_SHELTER_HEALTHY,

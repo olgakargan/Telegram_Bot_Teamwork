@@ -9,24 +9,6 @@ CREATE TABLE notification_task
     timeDate CHARACTER
 );
 
-
---changeset olgakargan:2
-create table reportData
-
-(
-    id          integer PRIMARY KEY not null,
-    chat_id     integer             not null,
-    ration      varchar             not null,
-    health      varchar             not null,
-    habits      varchar             not null,
-    filePath    varchar             not null,
-    days        integer             not null,
-    person_id   integer             not null,
-    caption     varchar             not null,
-    lastMessage date                not null,
-    data        bytea               not null
-);
-
 --changeset sbukaevsky:10
 CREATE TABLE cats
 (
@@ -45,4 +27,16 @@ CREATE TABLE dogs
     breed         TEXT,
     year_of_birth INTEGER,
     description   TEXT
+);
+
+--changeset sbukaevsky:14
+CREATE TABLE reports_data
+(
+    id       BIGINT,
+    chat_id  BIGINT,
+    ration   TEXT,
+    health   TEXT,
+    habits   TEXT,
+    days     INTEGER,
+    photo_id BIGINT
 );
