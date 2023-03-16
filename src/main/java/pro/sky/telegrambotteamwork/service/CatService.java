@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.model.Cat;
 import pro.sky.telegrambotteamwork.repository.CatRepository;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * Сервис-класс для манипуляций с питомцем - кошкой
@@ -16,6 +19,7 @@ import pro.sky.telegrambotteamwork.repository.CatRepository;
 public class CatService {
     private final Logger logger = LoggerFactory.getLogger(CatService.class);
     private final CatRepository catRepository;
+    private static final Pattern PATTERN = Pattern.compile("([\\W+]+)(\\/)([\\W+]+)(\\/)([0-9]{4})(\\/)([\\W+]+)");
 
     /**
      * Метод добавления кошки в базу данных
@@ -65,5 +69,32 @@ public class CatService {
     public void deleteCat(Long id) {
         logger.info("Вызван метод удаления кошки по id: {}", id);
         catRepository.deleteById(id);
+    }
+
+    /**
+     * Метод сохранения нового профиля кота/кошки в базу данных.
+     * Волонтер вводит имя, породу, год рождения и описание,
+     * с помощью регулярного выражения эти данные расчленяются и записываются в переменные,
+     * а затем в базу данных.
+     *
+     * @param message текстовое сообщение от волонтера
+     */
+    public void saveCat(String message) {
+        Matcher matcher = PATTERN.matcher(message);
+
+        if (matcher.matches()) {
+            Cat cat = new Cat();
+            String catName = matcher.group(1);
+            String breed = matcher.group(3);
+            String yourOfBirthString = matcher.group(5);
+            String description = matcher.group(7);
+            int yourOfBirth = Integer.parseInt(yourOfBirthString);
+            cat.setCatName(catName);
+            cat.setBreed(breed);
+            cat.setYearOfBirth(yourOfBirth);
+            cat.setDescription(description);
+            catRepository.save(cat);
+            logger.info("Новый профиль кошки/кота сохранен: " + cat);
+        }
     }
 }

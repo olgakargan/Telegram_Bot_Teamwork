@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.model.Dog;
 import pro.sky.telegrambotteamwork.repository.DogRepository;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Сервис-класс для манипуляций с питомцем - собакой
  */
@@ -15,6 +18,7 @@ import pro.sky.telegrambotteamwork.repository.DogRepository;
 public class DogService {
     private final Logger logger = LoggerFactory.getLogger(DogService.class);
     private final DogRepository dogRepository;
+    private static final Pattern PATTERN = Pattern.compile("([\\W+]+)(\\/)([\\W+]+)(\\/)([0-9]{4})(\\/)([\\W+]+)");
 
     /**
      * Метод добавления собаки в базу данных
@@ -64,5 +68,32 @@ public class DogService {
     public void deleteDog(Long id) {
         logger.info("Вызван метод удаления собаки по id: {}", id);
         dogRepository.deleteById(id);
+    }
+
+    /**
+     * Метод сохранения нового профиля собаки в базу данных.
+     * Волонтер вводит имя, породу, год рождения и описание,
+     * с помощью регулярного выражения эти данные расчленяются и записываются в переменные,
+     * а затем в базу данных.
+     *
+     * @param message текстовое сообщение от волонтера
+     */
+    public void saveDog(String message) {
+        Matcher matcher = PATTERN.matcher(message);
+
+        if (matcher.matches()) {
+            Dog dog = new Dog();
+            String dogName = matcher.group(1);
+            String breed = matcher.group(3);
+            String yourOfBirthString = matcher.group(5);
+            String description = matcher.group(7);
+            int yourOfBirth = Integer.parseInt(yourOfBirthString);
+            dog.setDogName(dogName);
+            dog.setBreed(breed);
+            dog.setYearOfBirth(yourOfBirth);
+            dog.setDescription(description);
+            dogRepository.save(dog);
+            logger.info("Новый профиль собаки сохранен: " + dog);
+        }
     }
 }

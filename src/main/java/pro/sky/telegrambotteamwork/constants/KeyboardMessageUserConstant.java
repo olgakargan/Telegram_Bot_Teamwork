@@ -67,7 +67,34 @@ public class KeyboardMessageUserConstant {
     public static final String BECOME_A_VOLUNTEER_CAT = "Стать волонтером";
     public static final String GO_BACK_CALL_A_VOLUNTEER_CAT = "Вернyтьcя нaзaд";
 
-    // Списки кнопок. Меню
+    // Кнопки главного меню для волонтеров
+    public static final String INFORMATION_FOR_VOLUNTEER = "Информация для волонтеров";
+    public static final String ADD_A_PET = "Добавить питомца в каталог";
+//    public static final String ADD_DOG = "Добавить собаку в базу";
+//    public static final String ADD_CAT = "Добавить кошку в базу";
+//    public static final String ADD_PET = "Добавить другого питомца";
+
+    public static final String REPORTS_OF_ADOPTIVE_PARENTS = "Отчеты усыновителей";
+    public static final String MAKE_A_VOLUNTEER = "Сделать волонтером";
+
+    // Кнопки информационного меню для волонтеров
+    public static final String MEMO_FOR_A_VOLUNTEER = "Памятка для волонтеров";
+    public static final String DUTIES_OF_VOLUNTEERS = "Обязанности волонтеров";
+    public static final String FORM_OF_CLOTHING = "Форма одежды";
+    public static final String VOLUNTEER_TRIPS = "Волонтерские выезды";
+
+    // Кнопки добавления питомца в каталог
+    public static final String ADD_DOG = "Добавить собаку";
+    public static final String ADD_CAT = "Добавить кошку";
+    public static final String ADD_PET = "Добавить другого питомца";
+
+    // Кнопки отчетов от усыновителей
+    public static final String VIEW_REPORTS = "Просмотреть отчеты";
+
+    // Кнопки создания волонтеров
+    public static final String CHANGE_TO_VOLUNTEER = "Изменить на волонтера";
+
+    // Списки кнопок. Меню для обычных пользователей
     public static final List<String> SUBSCRIPTION_MENU = List.of(
             SUBSCRIPTION
     );
@@ -146,5 +173,31 @@ public class KeyboardMessageUserConstant {
             QUESTION_TO_VOLUNTEER_CAT,
             BECOME_A_VOLUNTEER_CAT,
             GO_BACK_CALL_A_VOLUNTEER_CAT
+    );
+
+    // Списки кнопок. Меню для волонтеров
+
+    public static final List<String> MAIN_VOLUNTEER_MENU = List.of(
+            INFORMATION_FOR_VOLUNTEER,
+            ADD_A_PET,
+            REPORTS_OF_ADOPTIVE_PARENTS,
+            MAKE_A_VOLUNTEER
+    );
+    public static final List<String> INFORMATION_FOR_VOLUNTEER_MENU = List.of(
+            MEMO_FOR_A_VOLUNTEER,
+            DUTIES_OF_VOLUNTEERS,
+            FORM_OF_CLOTHING,
+            VOLUNTEER_TRIPS
+    );
+    public static final List<String> ADD_A_PET_MENU = List.of(
+            ADD_DOG,
+            ADD_CAT,
+            ADD_PET
+    );
+    public static final List<String> REPORTS_OF_ADOPTIVE_PARENTS_MENU = List.of(
+            VIEW_REPORTS
+    );
+    public static final List<String> MAKE_A_VOLUNTEER_MENU = List.of(
+            CHANGE_TO_VOLUNTEER
     );
 }
