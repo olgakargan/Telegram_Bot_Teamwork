@@ -8,11 +8,12 @@ import pro.sky.telegrambotteamwork.exception.NoEntityException;
 import pro.sky.telegrambotteamwork.model.Pet;
 import pro.sky.telegrambotteamwork.repository.PetRepository;
 
+import java.util.Collection;
+
 /**
  * Сервис-класс для манипуляций с питомцем
  */
 @Service
-@AllArgsConstructor
 public class PetService {
     private final Logger logger = LoggerFactory.getLogger(PetService.class);
     private final PetRepository petRepository;
@@ -31,14 +32,15 @@ public class PetService {
     }
 
     /**
-     * Метод для изменения информации о животном
-     * @param petId Идентификатор животного
-     * @param pet Новые данные
+     * Метод редактирования питомца в базе данных
+     *
+     * @param pet сущность питомца
+     * Возвращает ок
      */
     public void updatePet(Long petId, Pet pet) {
         logger.info("Was invoked method for update pet");
         Pet updatedPet = findPetById(petId);
-        updatedPet.setPet_name(pet.getPet_name());
+        updatedPet.setPetName(pet.getPetName());
         updatedPet.setBreed(pet.getBreed());
         updatedPet.setDescription(pet.getDescription());
         updatedPet.setYearOfBirth(pet.getYearOfBirth());
