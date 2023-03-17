@@ -3,6 +3,9 @@ package pro.sky.telegrambotteamwork.service;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.model.Dog;
 import pro.sky.telegrambotteamwork.repository.DogRepository;
@@ -18,7 +21,7 @@ import java.util.regex.Pattern;
 public class DogService {
     private final Logger logger = LoggerFactory.getLogger(DogService.class);
     private final DogRepository dogRepository;
-    private static final Pattern PATTERN = Pattern.compile("([\\W+]+)(\\/)([\\W+]+)(\\/)([0-9]{4})(\\/)([\\W+]+)");
+    private static final Pattern PATTERN = Pattern.compile("([\\W+]+)(\\/)([\\W+]+)(\\/)([0-9]{4})(\\/)([\\W+]+)(\\/)([\\W+]+)");
 
     /**
      * Метод добавления собаки в базу данных
@@ -37,6 +40,7 @@ public class DogService {
      * @param dog сущность собаки
      * @return Возвращает отредактированную в базе данных собаку
      */
+    @CachePut(value = "dogs", key = "#dog.id")
     public Dog updateDog(Dog dog) {
         logger.info("Вызван метод редактирования собаки: {}", dog);
         if (dogRepository.findById(dog.getId()).orElse(null) == null) {
@@ -51,6 +55,7 @@ public class DogService {
      * @param id идентификатор искомой собаки
      * @return Возвращает найденную собаку
      */
+    @Cacheable("dogs")
     public Dog findDog(Long id) {
         logger.info("Вызван метод поиска собаки по id {}", id);
         Dog dog = dogRepository.findById(id).orElse(null);
@@ -65,6 +70,7 @@ public class DogService {
      *
      * @param id идентификатор собаки
      */
+    @CacheEvict("dogs")
     public void deleteDog(Long id) {
         logger.info("Вызван метод удаления собаки по id: {}", id);
         dogRepository.deleteById(id);
@@ -86,11 +92,13 @@ public class DogService {
             String dogName = matcher.group(1);
             String breed = matcher.group(3);
             String yourOfBirthString = matcher.group(5);
-            String description = matcher.group(7);
+            String floor = matcher.group(7);
+            String description = matcher.group(9);
             int yourOfBirth = Integer.parseInt(yourOfBirthString);
             dog.setDogName(dogName);
             dog.setBreed(breed);
             dog.setYearOfBirth(yourOfBirth);
+            dog.setFloor(floor);
             dog.setDescription(description);
             dogRepository.save(dog);
             logger.info("Новый профиль собаки сохранен: " + dog);

@@ -3,6 +3,9 @@ package pro.sky.telegrambotteamwork.service;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.model.Cat;
 import pro.sky.telegrambotteamwork.repository.CatRepository;
@@ -19,7 +22,7 @@ import java.util.regex.Pattern;
 public class CatService {
     private final Logger logger = LoggerFactory.getLogger(CatService.class);
     private final CatRepository catRepository;
-    private static final Pattern PATTERN = Pattern.compile("([\\W+]+)(\\/)([\\W+]+)(\\/)([0-9]{4})(\\/)([\\W+]+)");
+    private static final Pattern PATTERN = Pattern.compile("([\\W+]+)(\\*)([\\W+]+)(\\*)([0-9]{4})(\\*)([\\W+]+)");
 
     /**
      * Метод добавления кошки в базу данных
@@ -38,6 +41,7 @@ public class CatService {
      * @param cat сущность кошки
      * @return Возвращает отредактированную в базе данных кошку
      */
+    @CachePut(value = "cats", key = "#cat.id")
     public Cat updateCat(Cat cat) {
         logger.info("Вызван метод редактирования кошки: {}", cat);
         if (catRepository.findById(cat.getId()).orElse(null) == null) {
@@ -52,6 +56,7 @@ public class CatService {
      * @param id идентификатор искомой кошки
      * @return Возвращает найденную кошку
      */
+    @Cacheable("cats")
     public Cat findCat(Long id) {
         logger.info("Вызван метод поиска кошки по id {}", id);
         Cat cat = catRepository.findById(id).orElse(null);
@@ -66,6 +71,7 @@ public class CatService {
      *
      * @param id идентификатор кошки
      */
+    @CacheEvict("cats")
     public void deleteCat(Long id) {
         logger.info("Вызван метод удаления кошки по id: {}", id);
         catRepository.deleteById(id);

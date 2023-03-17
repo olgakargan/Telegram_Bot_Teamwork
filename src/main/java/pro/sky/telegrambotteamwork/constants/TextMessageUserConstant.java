@@ -1,5 +1,7 @@
 package pro.sky.telegrambotteamwork.constants;
 
+import static pro.sky.telegrambotteamwork.constants.CommandMessageUserConstant.*;
+
 public class TextMessageUserConstant {
 
     public static final String SUBSCRIBE_TO_BOT_MESSAGE = "Здравствуй друг! Для того, что бы продолжить пользоваться ботом вам необходимо подписаться. Подпишитесь и вы узнаете много интересной информации!";
@@ -52,12 +54,17 @@ public class TextMessageUserConstant {
     public static final String ADD_A_PET_MESSAGE = "Выбери, какого питомца ты хочешь добавить в каталог и его увидят все пользователи ботом";
     public static final String REPORTS_OF_ADOPTIVE_PARENTS_MESSAGE = "Здесь ты сможешь просмотреть отчеты от усыновителей";
     public static final String MAKE_A_VOLUNTEER_MESSAGE = "Здесь ты сможешь назначить нового волонтера";
-    public static final String ADD_DOG_PREVIEW_MESSAGE = "Для того, чтобы добавить собаку в базу данных, введи команду /addDog";
-    public static final String ADD_CAT_PREVIEW_MESSAGE = "Для того, чтобы добавить кошку в базу данных, введи команду /addCat";
-    public static final String ADD_DOG_PREVIEW_2_MESSAGE = "Хорошо! А теперь введи еще одну команду: /bdDog";
-    public static final String ADD_CAT_PREVIEW_2_MESSAGE = "Хорошо! А теперь введи еще одну команду: /bdCat";
-    public static final String ADD_DOG_MESSAGE = "Отлично! Для того, чтобы добавить новую собаку в базу данных введи в одном сообщение, через символ слэш с большой буквы, имя собаки, ее породу, год рождения (только год, 4 цифры) и описание, а далее нажми отправить.\n\n" + "Пример ожидаемого сообщения: Арчи/Немецкая овчарка/2022/Очень игривый";
-    public static final String ADD_CAT_MESSAGE = "Отлично! Для того, чтобы добавить новую кошку или кота в базу данных введи в одном сообщение, через символ слэш с большой буквы, имя кошки, ее породу, год рождения (только год, 4 цифры) и описание, а далее нажми отправить.\n\n" + "Пример ожидаемого сообщения: Барсик/Британский/2022/Очень ласковый";
+    public static final String ADD_DOG_PREVIEW_MESSAGE = "Для того, чтобы добавить собаку в базу данных, введи команду " + ADD_DOG_COMMAND;
+    public static final String ADD_CAT_PREVIEW_MESSAGE = "Для того, чтобы добавить кошку в базу данных, введи команду " + ADD_CAT_COMMAND;
+    public static final String ADD_DOG_PREVIEW_2_MESSAGE = "Хорошо! А теперь введи еще одну команду: " + ADD_DOG_BD_COMMAND;
+    public static final String ADD_CAT_PREVIEW_2_MESSAGE = "Хорошо! А теперь введи еще одну команду: " + ADD_CAT_BD_COMMAND;
+    public static final String ADD_DOG_MESSAGE = "Отлично! Для того, чтобы добавить новую собаку в базу данных введи в одном сообщение, через символ слэш (/) с большой буквы, имя собаки, ее породу, год рождения (только год, 4 цифры), пол и описание, а далее нажми отправить.\n\n" + "Пример ожидаемого сообщения: \nАрчи/Немецкая овчарка/2022/Самец/Очень игривый";
+    public static final String ADD_CAT_MESSAGE = "Отлично! Для того, чтобы добавить новую кошку или кота в базу данных введи в одном сообщение, через символ звездочки (*) с большой буквы, имя кошки, ее породу, год рождения (только год, 4 цифры) и описание, а далее нажми отправить.\n\n" + "Пример ожидаемого сообщения: \nБарсик*Британский*2022*Очень ласковый";
     public static final String ADD_PET_MESSAGE = "Извини, в нашем питомнике пока только собаки и кошки...";
-    public static final String MESSAGE_AFTER_ADDING_PET = "Ты добавил нового питомца в базу данных. Отлично!";
+    public static final String ADD_REPORT_DATA_PREVIEW_MESSAGE = "Для того, чтобы отправить отчет о вашем питомце, введите команду " + ADD_REPORT_DATA_COMMAND;
+    public static final String ADD_REPORT_DATA_PREVIEW_2_MESSAGE = "Хорошо! А теперь введите еще одну команду: " + ADD_REPORT_DATA_BD_COMMAND;
+    public static final String ADD_REPORT_DATA_MESSAGE = "Отлично! Для того, чтобы отправить отчет о вашем питомце введите в одном сообщении, через символ решетки (#) с большой буквы, рацион животного, общее самочувствие, изменения в поведении и номер дня, которого вы отправляете, а далее нажмите отправить.\n\n" + "Пример ожидаемого сообщения: \nПитание хорошее. Кушает любую еду#Здоровье хорошее#Особых изменений в поведении нет#1";
+    public static final String MESSAGE_AFTER_ADDING_DOG = "Ты добавил новую собаку в базу данных. Отлично!";
+    public static final String MESSAGE_AFTER_ADDING_CAT = "Ты добавил новую кошку в базу данных. Отлично!";
+    public static final String MESSAGE_AFTER_ADDING_REPORT_DATA = "Вы отправили отчет на проверку. Отлично! Для продолжения операций с ботом введите команду " + START;
 }

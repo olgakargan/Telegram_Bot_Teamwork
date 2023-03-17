@@ -41,7 +41,7 @@ public class ImageService {
      * Метод загрузки фотографий для питомцев
      *
      * @param id        идентификатор питомца
-     * @param imageFile Медиафайл фотографии
+     * @param imageFile медиафайл фотографии
      * @throws IOException общий класс исключений ввода-вывода
      */
     public void uploadImage(Long id, MultipartFile imageFile) throws IOException {

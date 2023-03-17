@@ -6,6 +6,8 @@ import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.enums.Role;
 import pro.sky.telegrambotteamwork.model.User;
@@ -75,6 +77,7 @@ public class UserService {
      * @param update входящее обновление
      * @return Возвращает измененного пользователя
      */
+    @CachePut(value = "users", key = "#user.id")
     public User changeUser(User user, Update update) {
         Long userId = update.message().from().id();
         LocalDateTime dateTime = LocalDateTime.now();
@@ -96,6 +99,7 @@ public class UserService {
      * @param user сущность пользователя ботом
      * @return Возвращает измененного пользователя
      */
+    @CachePut(value = "users", key = "#user.id")
     public User updateUser(User user) {
         logger.info("Вызван метод редактирования пользователя: {}", user);
         if (userRepository.findById(user.getId()).orElse(null) == null) {
@@ -110,6 +114,7 @@ public class UserService {
      * @param id идентификатор искомого пользователя
      * @return Возвращает найденного пользователя
      */
+    @Cacheable("users")
     public User findUser(Long id) {
         logger.info("Вызван метод поиска пользователя по id {}", id);
         User user = userRepository.findById(id).orElse(null);
