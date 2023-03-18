@@ -1,5 +1,4 @@
 package pro.sky.telegrambotteamwork.model;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,8 +31,6 @@ public class ReportData {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "report_data_id")
     private User user;
-    private byte[] data;
-    private String filePath;
 
     public ReportData(Long id, Long chatId, String ration, String health, String habits, Integer day) {
         this.id = id;
@@ -42,13 +39,5 @@ public class ReportData {
         this.health = health;
         this.habits = habits;
         this.day = day;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
     }
 }

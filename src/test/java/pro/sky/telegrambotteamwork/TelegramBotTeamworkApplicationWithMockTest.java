@@ -14,24 +14,9 @@ import pro.sky.telegrambotteamwork.controller.*;
 import pro.sky.telegrambotteamwork.listeners.TelegramBotUpdatesListener;
 import pro.sky.telegrambotteamwork.model.Cat;
 import pro.sky.telegrambotteamwork.model.Pet;
-import pro.sky.telegrambotteamwork.model.ReportData;
 import pro.sky.telegrambotteamwork.repository.*;
 import pro.sky.telegrambotteamwork.service.*;
 import pro.sky.telegrambotteamwork.service.ReportDataService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.*;
-import java.util.Objects;
-
-
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 
 import java.util.List;
 
@@ -64,7 +49,9 @@ class TelegramBotTeamworkApplicationWithMockTest {
     private DogService dogService;
     @SpyBean
     private TelegramBotUpdatesListener telegramBotUpdatesListener;
+    //    private ReportDataService reportDataService;
     @SpyBean
+
     private ReportDataService reportDataService;
     @SpyBean
     private UserService userService;
@@ -83,9 +70,6 @@ class TelegramBotTeamworkApplicationWithMockTest {
     private ReportDataController reportDataController;
     @InjectMocks
     private UserController userController;
-
-    TelegramBotTeamworkApplicationWithMockTest() {
-    }
 
     @Test  //протестируем внесения нового животного в базу без внесения данных в реальную БД
     public void addNewTest() throws Exception {
@@ -182,9 +166,4 @@ class TelegramBotTeamworkApplicationWithMockTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()); //receive
     }
-
-
-
-
-
 }

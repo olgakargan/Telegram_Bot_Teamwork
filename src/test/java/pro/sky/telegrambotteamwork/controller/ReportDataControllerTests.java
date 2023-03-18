@@ -62,4 +62,5 @@ public class ReportDataControllerTests {
         Assertions.assertThat(response.getBody().getId()).isNotNull();
         Assertions.assertThat(response.getBody().getId()).isEqualTo(reportData.getId());
     }
+
 }

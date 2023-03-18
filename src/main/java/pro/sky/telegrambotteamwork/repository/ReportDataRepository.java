@@ -9,7 +9,6 @@ import java.util.Set;
 
 @Repository
 public interface ReportDataRepository extends JpaRepository<ReportData, Long> {
-
     Set<ReportData> findListByChatId(Long id);
 
     ReportData findByChatId(Long id);
