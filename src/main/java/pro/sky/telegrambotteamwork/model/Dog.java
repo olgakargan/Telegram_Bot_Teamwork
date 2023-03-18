@@ -26,7 +26,19 @@ public class Dog {
     private String breed;
     @Column(name = "year_of_birth")
     private int yearOfBirth;
+    @Column(name = "floor")
+    private String floor;
     @Column(name = "description")
     private String description;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image imageDog;
 
+    public Dog(Long id, String dogName, String breed, int yearOfBirth, String description) {
+        this.id = id;
+        this.dogName = dogName;
+        this.breed = breed;
+        this.yearOfBirth = yearOfBirth;
+        this.description = description;
+    }
 }

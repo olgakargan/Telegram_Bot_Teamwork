@@ -26,12 +26,6 @@
 		<artifactId>spring-boot-starter-web</artifactId>
 	</dependency>
 	<dependency>
-		<groupId>org.springdoc</groupId>
-		<artifactId>springdoc-openapi-ui</artifactId>
-		<version>1.6.14</version>
-	</dependency>
-
-	<dependency>
 		<groupId>org.postgresql</groupId>
 		<artifactId>postgresql</artifactId>
 		<scope>runtime</scope>
@@ -45,7 +39,6 @@
 		<groupId>com.github.pengrad</groupId>
 		<artifactId>java-telegram-bot-api</artifactId>
 		<version>6.3.0</version>
-<!--		<version>5.7.0</version>-->
 	</dependency>
 	<dependency>
 		<groupId>org.projectlombok</groupId>
@@ -65,21 +58,10 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
     </dependency>
-    <!--	<dependency>-->
-    <!--		<groupId>org.springframework</groupId>-->
-    <!--		<artifactId>spring-expression</artifactId>-->
-    <!--		<version>6.0.4</version>-->
-    <!--	</dependency>-->
-    <!--	<dependency>-->
-    <!--		<groupId>io.swagger.core.v3</groupId>-->
-    <!--		<artifactId>swagger-models</artifactId>-->
-    <!--		<version>2.2.7</version>-->
-    <!--	</dependency>-->
-	<!--	<dependency>-->
-	<!--		<groupId>io.swagger.core.v3</groupId>-->
-	<!--		<artifactId>swagger-annotations</artifactId>-->
-	<!--		<version>2.2.7</version>-->
-	<!--	</dependency>-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-cache</artifactId>
+    </dependency>
 </dependencies>
 
 <build>
