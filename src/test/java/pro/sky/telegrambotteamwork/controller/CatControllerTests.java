@@ -84,4 +84,6 @@ public class CatControllerTests {
         Assertions.assertThat(response.getBody().getId()).isNotNull();
         Assertions.assertThat(response.getBody().getId()).isEqualTo(cat.getId());
     }
+
 }
+

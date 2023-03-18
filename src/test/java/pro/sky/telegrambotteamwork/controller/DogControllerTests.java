@@ -1,4 +1,5 @@
 package pro.sky.telegrambotteamwork.controller;
+
 import com.pengrad.telegrambot.TelegramBot;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -85,4 +86,6 @@ public class DogControllerTests {
         Assertions.assertThat(response.getBody().getId()).isEqualTo(dog.getId());
     }
 
+
 }
+

@@ -1,4 +1,5 @@
 package pro.sky.telegrambotteamwork.model;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

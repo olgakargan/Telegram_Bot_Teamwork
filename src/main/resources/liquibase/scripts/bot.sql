@@ -39,4 +39,8 @@ CREATE TABLE reports_data
     habits   TEXT,
     days     INTEGER,
     photo_id BIGINT
+<<<<<<< HEAD
 );
+=======
+);
+>>>>>>> b0d41d27a7cd3115b27f1ca5bce83357116811cc

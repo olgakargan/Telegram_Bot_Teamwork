@@ -56,4 +56,6 @@ public class ReportDataController {
         return ResponseEntity.ok().build();
     }
 
+
 }
+

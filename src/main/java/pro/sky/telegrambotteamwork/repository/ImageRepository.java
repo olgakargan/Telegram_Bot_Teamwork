@@ -11,4 +11,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     Optional<Image> findByCatId(Long catId);
 
     Optional<Image> findByPetId(Long petId);
+
 }
+

@@ -6,4 +6,8 @@ import pro.sky.telegrambotteamwork.model.Dog;
 
 @Repository
 public interface DogRepository extends JpaRepository<Dog, Long> {
+
 }
+
+
+

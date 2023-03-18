@@ -1,4 +1,5 @@
 package pro.sky.telegrambotteamwork.service;
+
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -94,4 +95,6 @@ public class MenuService {
         Keyboard keyboard = keyboardDogAndCat(listOfButton);
         return new SendMessage(update.callbackQuery().message().chat().id(), messageText).replyMarkup(keyboard);
     }
+
 }
+

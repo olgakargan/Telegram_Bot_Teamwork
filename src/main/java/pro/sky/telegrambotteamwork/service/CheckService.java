@@ -1,4 +1,5 @@
 package pro.sky.telegrambotteamwork.service;
+
 import com.pengrad.telegrambot.model.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,4 +66,6 @@ public class CheckService {
         logger.info("Вызван метод проверки наличия запроса от пользователя после нажатия кнопки");
         return update.callbackQuery().message() != null;
     }
+
 }
+

@@ -46,4 +46,6 @@ public class TelegramBotUpdatesListenerMockTest {
     private Update getUpdate(String json, String replaced) {
         return BotUtils.fromJson(json.replace("%command%", replaced), Update.class);
     }
+
 }
+

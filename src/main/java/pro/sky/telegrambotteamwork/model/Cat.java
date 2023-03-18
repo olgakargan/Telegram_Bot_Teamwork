@@ -1,4 +1,5 @@
 package pro.sky.telegrambotteamwork.model;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,9 @@ public class Cat {
     @JoinColumn(name = "image_id")
     private Image imageCat;
 
+
     public Cat(long l, String алекс, String британский, int i, String описание) {
     }
+
 }
+

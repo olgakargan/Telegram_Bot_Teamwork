@@ -67,4 +67,6 @@ public class TextMessageUserConstant {
     public static final String MESSAGE_AFTER_ADDING_DOG = "Ты добавил новую собаку в базу данных. Отлично!";
     public static final String MESSAGE_AFTER_ADDING_CAT = "Ты добавил новую кошку в базу данных. Отлично!";
     public static final String MESSAGE_AFTER_ADDING_REPORT_DATA = "Вы отправили отчет на проверку. Отлично! Для продолжения операций с ботом введите команду " + START;
+
 }
+
