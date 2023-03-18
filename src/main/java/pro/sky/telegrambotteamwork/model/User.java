@@ -1,5 +1,4 @@
 package pro.sky.telegrambotteamwork.model;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,8 +6,7 @@ import pro.sky.telegrambotteamwork.enums.Role;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * Класс с сущностью пользователя ботом
@@ -29,25 +27,23 @@ public class User {
     private String lastName;
     @Column(name = "user_name")
     private String userName;
-    @Column(name = "phone")
-    private String phone;
     @Column(name = "user_id")
     private Long userId;
     @Column(name = "chat_id")
     private Long chatId;
     @Column(name = "date_time")
     private LocalDateTime dateTime;
-    @ElementCollection(targetClass = Role.class)
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private Set<Role> roles = new HashSet<>();
+    private Role role;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Collection<ReportData> reportDataset;
 
-    public User(Long id, String firstName, String lastName, String userName, String phone, Long userId, Long chatId) {
+    public User(Long id, String firstName, String lastName, String userName, Long userId, Long chatId) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
-        this.phone = phone;
         this.userId = userId;
         this.chatId = chatId;
     }

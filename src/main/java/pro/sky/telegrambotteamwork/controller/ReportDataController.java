@@ -1,67 +1,59 @@
 package pro.sky.telegrambotteamwork.controller;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pro.sky.telegrambotteamwork.listeners.TelegramBotUpdatesListener;
 import pro.sky.telegrambotteamwork.model.ReportData;
-import pro.sky.telegrambotteamwork.serviceImpl.ReportDataService;
+import pro.sky.telegrambotteamwork.service.ReportDataService;
 
-import java.util.Collection;
-
+/**
+ * Класс-контроллер для работы с отчетами от пользователя
+ */
 @RestController
-@RequestMapping("photoReports")
+@RequestMapping("/api/report-data")
 @AllArgsConstructor
+@Tag(name = "Работа с отчетами", description = "Позволяет управлять методами по работе с отчетами от пользователей")
 public class ReportDataController {
     private final ReportDataService reportDataService;
-    private TelegramBotUpdatesListener telegramBotUpdatesListener;
-    private final String fileType = "image/png";
 
-    @Operation(summary = "Просмотр отчетов по id")
-    @GetMapping("/{id}/report")
-    public ReportData downloadReport(@PathVariable Long id) {
-        return reportDataService.findById(id);
+    /**
+     * Метод добавления деталей отчета в базу данных
+     *
+     * @param reportData детали отчета
+     * @return Возвращает сохраненный в базу данных отчет
+     */
+    @Operation(summary = "Метод добавления отчета в базу данных", description = "Позваляет добавлять отчет в базу данных")
+    @PostMapping
+    public ReportData addReportData(@RequestBody ReportData reportData) {
+        return reportDataService.addReportData(reportData);
     }
 
-    @Operation(summary = "Удаление отчетов по id")
+    /**
+     * Метод поиска отчета в базе данных
+     *
+     * @param id идентификатор отчета
+     * @return Возвращает найденный отчет
+     */
+    @Operation(summary = "Метод, чтобы найти отчет в базе данных", description = "Позваляет найти отчет в базе данных")
+    @GetMapping("/{id}")
+    public ReportData findReportData(@Parameter(description = "Идентификатор искомого отчета") @PathVariable Long id) {
+        return reportDataService.findReportData(id);
+    }
+
+    /**
+     * Метод удаления отчета из базы данных
+     *
+     * @param id идентификатор отчета
+     * @return Возвращает ответ 200, если удаление отчета успешно произошло
+     */
+    @Operation(summary = "Метод, чтобы удалить отчет из базы данных", description = "Позваляет удалить отчет из базы данных")
     @DeleteMapping("/{id}")
-    public void remove(@PathVariable Long id) {
-        reportDataService.remove(id);
-    }
-
-    @Operation(summary = "Просмотр всех отчетов", description = "Просмотр всех отчетов, либо всех отчетов определенного пользователя по chat_id")
-    @GetMapping("getAll")
-    public ResponseEntity<Collection<ReportData>> getAll() {
-        return ResponseEntity.ok(reportDataService.getAll());
-    }
-
-    @Operation(summary = "Просмотр фото по Id отчета")
-    @GetMapping("/{id}/photo-from-db")
-    public ResponseEntity<byte[]> downloadPhotoFromDB(@PathVariable Long id) {
-        ReportData reportData = reportDataService.findById(id);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(fileType));
-        headers.setContentLength(reportData.getData().length);
-
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(reportData.getData());
-    }
-
-    @Operation(summary = "Отправить сообщение пользователю", description = "Написать сообщение определенному пользователю." +
-            "Например связался с волонтерами по номеру")
-    @GetMapping("message-to-person")
-    public void sendMessageToPerson(@Parameter(description = "id чат с пользователем", example = "123456789")
-                                    @RequestParam Long chatId,
-                                    @Parameter(description = "Ваше сообщение")
-                                    @RequestParam String message) {
-
-        telegramBotUpdatesListener.sendMessage(chatId, message);
+    public ResponseEntity<ReportData> deleteReportData(@Parameter(description = "Идентификатор удаляемого отчета") @PathVariable Long id) {
+        reportDataService.deleteReportData(id);
+        return ResponseEntity.ok().build();
     }
 
 }

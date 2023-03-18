@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset olgakargan:1
+--changeset Nikolay:1
 CREATE TABLE notification_task
 (
     id       INT,
@@ -9,47 +9,34 @@ CREATE TABLE notification_task
     timeDate CHARACTER
 );
 
---changeset sbukaevsky:2
-CREATE TABLE users
+--changeset sbukaevsky:10
+CREATE TABLE cats
 (
-    id        BIGINT,
-    user_name TEXT,
-    user_id   BIGINT,
-    phone     TEXT
+    id            BIGINT,
+    cat_name      TEXT,
+    breed         TEXT,
+    year_of_birth INTEGER,
+    description   TEXT
 );
 
-
---changeset sbukaevsky:8
-DROP TABLE users;
-
---changeset sbukaevsky:9
-ALTER TABLE users ALTER COLUMN id TYPE BIGINT;
-
-
---changeset olgakargan:2
-create table reportData
-
+--changeset sbukaevsky:11
+CREATE TABLE dogs
 (
-    id          integer PRIMARY KEY not null,
-    chat_id     integer             not null,
-    ration      varchar             not null,
-    health      varchar             not null,
-    habits      varchar             not null,
-    filePath    varchar             not null,
-    days        integer             not null,
-    person_id   integer             not null,
-    caption     varchar             not null,
-    lastMessage date                not null,
-    data        bytea               not null
+    id            BIGINT,
+    dog_name      TEXT,
+    breed         TEXT,
+    year_of_birth INTEGER,
+    description   TEXT
 );
---changeset olgakargan:3
-CREATE TABLE pet
+
+--changeset sbukaevsky:14
+CREATE TABLE reports_data
 (
-    id              BIGINT,
-    breed           TEXT,
-    pet_name        TEXT,
-    year_of_birth   INT,
-    description     TEXT
-)
-=======
->>>>>>> origin/dev
+    id       BIGINT,
+    chat_id  BIGINT,
+    ration   TEXT,
+    health   TEXT,
+    habits   TEXT,
+    days     INTEGER,
+    photo_id BIGINT
+);

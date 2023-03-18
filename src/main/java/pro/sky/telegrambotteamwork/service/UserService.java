@@ -5,6 +5,8 @@ import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.enums.Role;
 import pro.sky.telegrambotteamwork.model.User;
@@ -32,33 +34,29 @@ public class UserService {
      * @param update входящее обновление
      * @return Возвращает сохраненного пользователя
      */
-    public User saveUser(User user, Update update) {
-        if (update.message().contact() != null) {
-            String firstName = update.message().contact().firstName();
-            String lastName = update.message().contact().lastName();
-            String userName = update.message().chat().username();
-            String phone = update.message().contact().phoneNumber();
-            Long userId = update.message().from().id();
-            Long chatId = update.message().chat().id();
-            LocalDateTime dateTime = LocalDateTime.now();
-            Collection<User> usersUserId = userRepository.findUserByUserId(userId);
-
-            for (User userUserId : usersUserId) {
-                telegramBot.execute(new SendMessage(userUserId.getChatId(), YOU_ARE_SUBSCRIBED));
-            }
-
+    public void saveUser(User user, Update update) {
+        String firstName = update.callbackQuery().from().firstName();
+        String lastName = update.callbackQuery().from().lastName();
+        String userName = update.callbackQuery().from().username();
+        Long userId = update.callbackQuery().message().from().id();
+        Long chatId = update.callbackQuery().message().chat().id();
+        LocalDateTime dateTime = LocalDateTime.now();
+        Collection<User> usersUserId = userRepository.findUserByUserId(userId);
+        if (!usersUserId.isEmpty()) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), YOU_ARE_SUBSCRIBED));
+            return;
+        } else {
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setUserName(userName);
-            user.setPhone(phone);
             user.setUserId(userId);
+            user.setChatId(chatId);
             user.setDateTime(dateTime);
-            user.getRoles().add(Role.ROLE_USER);
+            user.setRole(Role.ROLE_USER);
             userRepository.save(user);
             telegramBot.execute(new SendMessage(chatId, YOU_HAVE_SUBSCRIBED));
             logger.info("Ползователь сохранен в базу данных: {}", user);
         }
-        return userRepository.save(user);
     }
 
     /**
@@ -78,13 +76,14 @@ public class UserService {
      * @param update входящее обновление
      * @return Возвращает измененного пользователя
      */
+    @CachePut(value = "users", key = "#user.id")
     public User changeUser(User user, Update update) {
         Long userId = update.message().from().id();
         LocalDateTime dateTime = LocalDateTime.now();
         Collection<User> usersUserId = userRepository.findUserByUserId(userId);
         for (User userUserId : usersUserId) {
             user.setDateTime(dateTime);
-            user.getRoles().add(Role.ROLE_VOLUNTEER);
+            user.setRole(Role.ROLE_VOLUNTEER);
             userRepository.save(user);
             telegramBot.execute(new SendMessage(userUserId.getChatId(), ARE_YOU_VOLUNTEER));
             logger.info("Пользователь переименован на волонтера: {}", user);
@@ -99,6 +98,7 @@ public class UserService {
      * @param user сущность пользователя ботом
      * @return Возвращает измененного пользователя
      */
+    @CachePut(value = "users", key = "#user.id")
     public User updateUser(User user) {
         logger.info("Вызван метод редактирования пользователя: {}", user);
         if (userRepository.findById(user.getId()).orElse(null) == null) {
@@ -111,8 +111,9 @@ public class UserService {
      * Метод поиска пользователя в базе данных
      *
      * @param id идентификатор искомого пользователя
-     * @return Возвращает найденого пользователя
+     * @return Возвращает найденного пользователя
      */
+    @Cacheable("users")
     public User findUser(Long id) {
         logger.info("Вызван метод поиска пользователя по id {}", id);
         User user = userRepository.findById(id).orElse(null);

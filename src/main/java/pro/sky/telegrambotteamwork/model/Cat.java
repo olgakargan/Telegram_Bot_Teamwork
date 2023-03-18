@@ -1,5 +1,4 @@
 package pro.sky.telegrambotteamwork.model;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,4 +27,10 @@ public class Cat {
     private int yearOfBirth;
     @Column(name = "description")
     private String description;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image imageCat;
+
+    public Cat(long l, String алекс, String британский, int i, String описание) {
+    }
 }

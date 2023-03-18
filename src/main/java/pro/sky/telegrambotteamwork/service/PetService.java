@@ -2,6 +2,8 @@ package pro.sky.telegrambotteamwork.service;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.model.Pet;
 import pro.sky.telegrambotteamwork.repository.PetRepository;
@@ -32,6 +34,7 @@ public class PetService {
      * @param pet сущность питомца
      * @return Возвращает отредактированного в базе данных питомца
      */
+    @CachePut(value = "pets", key = "#pet.id")
     public Pet updatePet(Pet pet) {
         logger.info("Вызван метод редактирования питомца: {}", pet);
         return petRepository.save(pet);
@@ -43,6 +46,7 @@ public class PetService {
      * @param id идентификатор искомого питомца
      * @return Возвращает найденого питомца
      */
+    @Cacheable("pets")
     public Pet findPet(Long id) {
         logger.info("Вызван метод поиска питомца по id {}", id);
         Pet pet = petRepository.findById(id).orElse(null);

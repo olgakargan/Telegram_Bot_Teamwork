@@ -1,12 +1,12 @@
 package pro.sky.telegrambotteamwork.model;
 
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.awt.*;
 
 /**
  * Класс с сущностью домашнего питомца
@@ -35,4 +35,7 @@ public class Pet {
     @Schema(description = "Описание", example = "Добрый, любит детей")
     @Column(name = "description")
     private String description;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image imagePet;
 }
