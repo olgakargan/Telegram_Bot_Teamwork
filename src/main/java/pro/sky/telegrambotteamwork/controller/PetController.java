@@ -96,7 +96,7 @@ public class PetController {
                     schema = @Schema(implementation = Pet.class))
     )
     @DeleteMapping("/{petId}")
-    public ResponseEntity<Pet> deleteTodo(@PathVariable("petId") Long petId) {
+    public ResponseEntity<Pet> deletePet(@PathVariable("petId") Long petId) {
         petService.deletePet(petId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
