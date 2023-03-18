@@ -6,20 +6,20 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.SendResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import pro.sky.telegrambotteamwork.enums.Role;
 import pro.sky.telegrambotteamwork.model.User;
-import pro.sky.telegrambotteamwork.service.CheckService;
-import pro.sky.telegrambotteamwork.service.MenuService;
-import pro.sky.telegrambotteamwork.service.UserService;
+import pro.sky.telegrambotteamwork.repository.UserRepository;
+import pro.sky.telegrambotteamwork.service.*;
 
 import javax.annotation.PostConstruct;
+import java.util.Collection;
 import java.util.List;
 
-import static pro.sky.telegrambotteamwork.constants.CommandMessageUserConstant.START;
+import static pro.sky.telegrambotteamwork.constants.CommandMessageUserConstant.*;
 import static pro.sky.telegrambotteamwork.constants.KeyboardMessageUserConstant.*;
 import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.*;
 
@@ -35,7 +35,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final MenuService menuService;
     private final UserService userService;
     private final CheckService checkService;
-
+    private final UserRepository userRepository;
+    private final DogService dogService;
+    private final CatService catService;
+    private final ReportDataService reportDataService;
 
     /**
      * Метод, который вызывается сразу после инициализации свойств
@@ -59,44 +62,65 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 logger.info("Запрос от пользователя: {}", update);
                 Message messageUser = update.message();
                 User user = new User();
+                Collection<User> rolesUser = userRepository.findUserByRole(Role.ROLE_USER);
+                Collection<User> rolesVolunteer = userRepository.findUserByRole(Role.ROLE_VOLUNTEER);
 
-                if (checkService.hasMessage(update)) {
-                    if (checkService.hasText(update)) {
+                if (!rolesUser.isEmpty() || rolesUser.isEmpty() && rolesVolunteer.isEmpty()) {
+                    if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
                             telegramBot.execute(menuService.loadingTheMenu(messageUser, SUBSCRIBE_TO_BOT_MESSAGE, SUBSCRIPTION_MENU));
+                        } else {
+                            addReportDataMenu(update);
+                        }
+                    } else if (checkService.hasCallbackQuery(update)) {
+                        if (SUBSCRIPTION.equals(update.callbackQuery().data())) {
+                            userService.saveUser(user, update);
+                            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
+                        } else if (DOG.equals(update.callbackQuery().data())) {
+                            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, DOG_MESSAGE, MAIN_DOG_MENU));
+                        } else if (CAT.equals(update.callbackQuery().data())) {
+                            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
+                        } else if (ANOTHER_PET.equals(update.callbackQuery().data())) {
+                            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Информация о том, каких питомцев еще можно взять"));
+                        } else {
+                            mainMenuDog(update);
+                            informationMenuDog(update);
+                            takeDogMenu(update);
+                            dogReportMenu(update);
+                            callVolunteerDogMenu(update);
+                            mainMenuCat(update);
+                            informationMenuCat(update);
+                            takeCatMenu(update);
+                            catReportMenu(update);
+                            callVolunteerCatMenu(update);
                         }
                     }
-                } else if (checkService.hasCallbackQuery(update)) {
-                    if (SUBSCRIPTION.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
-                    }
                 }
-                if (checkService.hasCallbackQuery(update)) {
-                    if (DOG.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, DOG_MESSAGE, MAIN_DOG_MENU));
-                    } else {
-                        mainMenuDog(update);
+                if (!rolesVolunteer.isEmpty()) {
+                    if (checkService.hasMessage(update) && checkService.hasText(update)) {
+                        if (START.equals(messageUser.text())) {
+                            telegramBot.execute(menuService.loadingTheMenu(messageUser, WELCOME_VOLUNTEER_MESSAGE, MAIN_VOLUNTEER_MENU));
+                        } else {
+                            addDogMenu(update);
+                            addCatMenu(update);
+                        }
+                    } else if (checkService.hasCallbackQuery(update)) {
+                        if (INFORMATION_FOR_VOLUNTEER.equals(update.callbackQuery().data())) {
+                            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, INFORMATION_WELCOME_MESSAGE, INFORMATION_FOR_VOLUNTEER_MENU));
+                        } else if (ADD_A_PET.equals(update.callbackQuery().data())) {
+                            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, ADD_A_PET_MESSAGE, ADD_A_PET_MENU));
+                        } else if (REPORTS_OF_ADOPTIVE_PARENTS.equals(update.callbackQuery().data())) {
+                            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, REPORTS_OF_ADOPTIVE_PARENTS_MESSAGE, REPORTS_OF_ADOPTIVE_PARENTS_MENU));
+                        } else if (MAKE_A_VOLUNTEER.equals(update.callbackQuery().data())) {
+                            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, MAKE_A_VOLUNTEER_MESSAGE, MAKE_A_VOLUNTEER_MENU));
+                        } else {
+                            informationMenuVolunteer(update);
+                            addPetMenuVolunteer(update);
+                        }
                     }
-                }
-                if (checkService.hasCallbackQuery(update)) {
-                    if (CAT.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
-                    } else {
-                        mainMenuCat(update);
-                    }
-                }
-                if (checkService.hasCallbackQuery(update)) {
-                    if (ANOTHER_PET.equals(update.callbackQuery().data())) {
-                        telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Информация о том, каких питомцев еще можно взять"));
-                    }
-                }
-                if (checkService.hasCallbackQuery(update)) {
-                    informationMenu(update);
-                    takeDogMenu(update);
-                    takeCatMenu(update);
-                    petReportMenu(update);
                 }
             });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,13 +134,15 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     private void mainMenuDog(Update update) {
         if (INFORMATION_ABOUT_THE_SHELTER_DOG.equals(update.callbackQuery().data())) {
-            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, INFORMATION_ABOUT_THE_SHELTER_MESSAGE, INFORMATION_MENU));
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, INFORMATION_ABOUT_THE_SHELTER_MESSAGE, INFORMATION_MENU_DOG));
         } else if (TAKE_A_FROM_A_SHELTER_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, TAKE_A_PET_FROM_A_SHELTER_MESSAGE, TAKE_A_FROM_A_SHELTER_DOG_MENU));
         } else if (PET_REPORT_DOG.equals(update.callbackQuery().data())) {
-            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, PET_REPORT_MESSAGE, PET_REPORT_MENU));
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, PET_REPORT_MESSAGE, DOG_REPORT_MENU));
         } else if (CALL_A_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
-            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CALL_A_VOLUNTEER_MESSAGE, CALL_A_VOLUNTEER_MENU));
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CALL_A_VOLUNTEER_MESSAGE, CALL_A_VOLUNTEER_DOG_MENU));
+        } else if (GO_BACK_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
         }
     }
 
@@ -127,39 +153,74 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     private void mainMenuCat(Update update) {
         if (INFORMATION_ABOUT_THE_SHELTER_CAT.equals(update.callbackQuery().data())) {
-            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, INFORMATION_ABOUT_THE_SHELTER_MESSAGE, INFORMATION_MENU));
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, INFORMATION_ABOUT_THE_SHELTER_MESSAGE, INFORMATION_MENU_CAT));
         } else if (TAKE_A_FROM_A_SHELTER_CAT.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, TAKE_A_PET_FROM_A_SHELTER_MESSAGE, TAKE_A_FROM_A_SHELTER_CAT_MENU));
         } else if (PET_REPORT_CAT.equals(update.callbackQuery().data())) {
-            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, PET_REPORT_MESSAGE, PET_REPORT_MENU));
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, PET_REPORT_MESSAGE, CAT_REPORT_MENU));
         } else if (CALL_A_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
-            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CALL_A_VOLUNTEER_MESSAGE, CALL_A_VOLUNTEER_MENU));
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CALL_A_VOLUNTEER_MESSAGE, CALL_A_VOLUNTEER_CAT_MENU));
+        } else if (GO_BACK_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
         }
     }
 
     /**
-     * Этот метод выводит информационное меню о питомце
+     * Этот метод выводит информацию о собаках для пользователей по нажатии на кнопку
      *
      * @param update входящее обновление
      */
-    private void informationMenu(Update update) {
-        if (ABOUT_OUR_NURSERY.equals(update.callbackQuery().data())) {
+    private void informationMenuDog(Update update) {
+        if (ABOUT_OUR_NURSERY_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), ABOUT_OUR_NURSERY_MESSAGE));
-        } else if (AMBULANCE_FOR_ANIMALS.equals(update.callbackQuery().data())) {
+        } else if (AMBULANCE_FOR_ANIMALS_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), AMBULANCE_FOR_ANIMALS_MESSAGE));
-        } else if (INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE.equals(update.callbackQuery().data())) {
+        } else if (INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE_MESSAGE));
-        } else if (REHABILITATION_FOR_SPECIAL_ANIMALS.equals(update.callbackQuery().data())) {
+        } else if (REHABILITATION_FOR_SPECIAL_ANIMALS_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REHABILITATION_FOR_SPECIAL_ANIMALS_MESSAGE));
-        } else if (REQUISITES.equals(update.callbackQuery().data())) {
+        } else if (SAFETY_PRECAUTIONS_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Техника безопасности для собак"));
+        } else if (REQUISITES_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REQUISITES_MESSAGE));
-        } else if (CONTACTS.equals(update.callbackQuery().data())) {
+        } else if (CONTACTS_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), CONTACTS_MESSAGE));
+        } else if (SECURITY_CONTACTS_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Контакты охраны для собак"));
+        } else if (GO_BACK_INFORMATION_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, DOG_MESSAGE, MAIN_DOG_MENU));
         }
     }
 
     /**
-     * Этот метод выводит меню о том, как взять собаку из приюта
+     * Этот метод выводит информацию о кошках для пользователей по нажатии на кнопку
+     *
+     * @param update входящее обновление
+     */
+    private void informationMenuCat(Update update) {
+        if (ABOUT_OUR_NURSERY_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), ABOUT_OUR_NURSERY_MESSAGE));
+        } else if (AMBULANCE_FOR_ANIMALS_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), AMBULANCE_FOR_ANIMALS_MESSAGE));
+        } else if (INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), INSTRUCTIONS_FOR_CALLING_AN_AMBULANCE_MESSAGE));
+        } else if (REHABILITATION_FOR_SPECIAL_ANIMALS_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REHABILITATION_FOR_SPECIAL_ANIMALS_MESSAGE));
+        } else if (SAFETY_PRECAUTIONS_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Техника безопасности для кошек"));
+        } else if (REQUISITES_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REQUISITES_MESSAGE));
+        } else if (CONTACTS_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), CONTACTS_MESSAGE));
+        } else if (SECURITY_CONTACTS_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Контакты охраны для кошек"));
+        } else if (GO_BACK_INFORMATION_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
+        }
+    }
+
+    /**
+     * Этот метод выводит информацию о том, как взять собаку из приюта
      *
      * @param update входящее обновление
      */
@@ -174,11 +235,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), PET_TRANSFER_PROCEDURE_MESSAGE));
         } else if (DOG_CATALOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Каталог собак"));
+        } else if (GO_BACK_TAKE_A_FROM_A_SHELTER_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, DOG_MESSAGE, MAIN_DOG_MENU));
         }
     }
 
     /**
-     * Этот метод выводит меню о том, как взять кошку из приюта
+     * Этот метод выводит информацию о том, как взять кошку из приюта
      *
      * @param update входящее обновление
      */
@@ -193,30 +256,147 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), PET_TRANSFER_PROCEDURE_MESSAGE));
         } else if (CAT_CATALOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Каталог кошек"));
+        } else if (GO_BACK_TAKE_A_FROM_A_SHELTER_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
         }
     }
 
     /**
-     * Этот метод выводит информацию о том, как присылать отчет о питомце и кнопка с отправкой отчета
+     * Этот метод выводит информацию о том, как присылать отчет о собаке и кнопка с отправкой отчета
      *
      * @param update входящее обновление
      */
-    private void petReportMenu(Update update) {
-        if (INFORMATION_ABOUT_REPORT.equals(update.callbackQuery().data())) {
+    private void dogReportMenu(Update update) {
+        if (INFORMATION_ABOUT_REPORT_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), INFORMATION_ABOUT_REPORT_MESSAGE));
-        } else if (SEND_REPORT.equals(update.callbackQuery().data())) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Прислать отчет о питомце"));
+        } else if (SEND_REPORT_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), ADD_REPORT_DATA_PREVIEW_MESSAGE));
+        } else if (GO_BACK_PET_REPORT_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, DOG_MESSAGE, MAIN_DOG_MENU));
         }
     }
 
     /**
-     * Метод выводит сообщения пользователю
+     * Этот метод выводит информацию о том, как присылать отчет о кошке и кнопка с отправкой отчета
      *
-     * @param chatId идентификатор чата
-     * @param text   текстовое сообщение
+     * @param update входящее обновление
      */
-    public void sendMessage(Long chatId, String text) {
-        SendResponse response = telegramBot.execute(new SendMessage(chatId, text));
+    private void catReportMenu(Update update) {
+        if (INFORMATION_ABOUT_REPORT_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), INFORMATION_ABOUT_REPORT_MESSAGE));
+        } else if (SEND_REPORT_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), ADD_REPORT_DATA_PREVIEW_MESSAGE));
+        } else if (GO_BACK_PET_REPORT_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
+        }
+    }
+
+    /**
+     * Этот метод даёт обратную свзь с волонтером по собакам и отправкой запроса на получение статуса волонтера
+     *
+     * @param update входящее обновление
+     */
+    private void callVolunteerDogMenu(Update update) {
+        if (QUESTION_TO_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Вопрос волонтеру о собаке"));
+        } else if (BECOME_A_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Стать волонтером по собакам"));
+        } else if (GO_BACK_CALL_A_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, DOG_MESSAGE, MAIN_DOG_MENU));
+        }
+    }
+
+    /**
+     * Этот метод даёт обратную свзь с волонтером по кошкам и отправкой запроса на получение статуса волонтера
+     *
+     * @param update входящее обновление
+     */
+    private void callVolunteerCatMenu(Update update) {
+        if (QUESTION_TO_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Вопрос волонтеру о кошке"));
+        } else if (BECOME_A_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Стать волонтером по кошкам"));
+        } else if (GO_BACK_CALL_A_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
+        }
+    }
+
+    /**
+     * Этот метод выводит информацию для волонтеров по нажатию кнопки
+     *
+     * @param update входящее обновление
+     */
+    private void informationMenuVolunteer(Update update) {
+        if (MEMO_FOR_A_VOLUNTEER.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), MEMO_FOR_A_VOLUNTEER_MESSAGE));
+        } else if (DUTIES_OF_VOLUNTEERS.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), DUTIES_OF_VOLUNTEERS_MESSAGE));
+        } else if (FORM_OF_CLOTHING.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), FORM_OF_CLOTHING_MESSAGE));
+        } else if (VOLUNTEER_TRIPS.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), VOLUNTEER_TRIPS_MESSAGE));
+        }
+    }
+
+    /**
+     * Этот метод выводит информацию о том, как добавить питомцев в базу данных
+     *
+     * @param update входящее обновление
+     */
+    private void addPetMenuVolunteer(Update update) {
+        if (ADD_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), ADD_DOG_PREVIEW_MESSAGE));
+        } else if (ADD_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), ADD_CAT_PREVIEW_MESSAGE));
+        } else if (ADD_PET.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), ADD_PET_MESSAGE));
+        }
+    }
+
+    /**
+     * Этот метод добавляет собаку и сохраняет ее в базу данных
+     *
+     * @param update входящее обновление
+     */
+    private void addDogMenu(Update update) {
+        if (ADD_DOG_COMMAND.equals(update.message().text())) {
+            telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_DOG_PREVIEW_2_MESSAGE));
+        } else if (ADD_DOG_BD_COMMAND.equals(update.message().text())) {
+            telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_DOG_MESSAGE));
+        } else {
+            dogService.saveDog(update.message().text());
+        }
+    }
+
+    /**
+     * Этот метод добавляет кошку и сохраняет ее в базу данных
+     *
+     * @param update входящее обновление
+     */
+    private void addCatMenu(Update update) {
+        if (ADD_CAT_COMMAND.equals(update.message().text())) {
+            telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_CAT_PREVIEW_2_MESSAGE));
+        } else if (ADD_CAT_BD_COMMAND.equals(update.message().text())) {
+            telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_CAT_MESSAGE));
+        } else {
+            catService.saveCat(update.message().text());
+        }
+    }
+
+    /**
+     * Этот метод добавляет отчет от пользователя и сохраняет его в базу данных
+     *
+     * @param update входящее обновление
+     */
+    private void addReportDataMenu(Update update) {
+        if (ADD_REPORT_DATA_COMMAND.equals(update.message().text())) {
+            telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_REPORT_DATA_PREVIEW_2_MESSAGE));
+        } else if (ADD_REPORT_DATA_BD_COMMAND.equals(update.message().text())) {
+            telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_REPORT_DATA_MESSAGE));
+        } else {
+            reportDataService.saveReportData(update, update.message().text());
+            telegramBot.execute(new SendMessage(update.message().chat().id(), MESSAGE_AFTER_ADDING_REPORT_DATA));
+        }
     }
 
 }

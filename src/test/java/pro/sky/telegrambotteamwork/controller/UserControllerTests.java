@@ -28,14 +28,14 @@ public class UserControllerTests {
 
     @Test
     public void addUserTest() {
-        User user = new User(1L, "Иван", "Иванов", "@ivanIvanov", "+79010000000", 123456789L, 987654321L);
+        User user = new User(1L, "Иван", "Иванов", "@ivanIvanov", 123456789L, 987654321L);
         ResponseEntity<User> response = formingUrl(constructionUriBuilderCreation().build().toUri(), user);
         checkingTheUsersForCreation(user, response);
     }
 
     @Test
     public void findUserTest() {
-        User user = new User(1L, "Иван", "Иванов", "@ivanIvanov", "+79010000000", 123456789L, 987654321L);
+        User user = new User(1L, "Иван", "Иванов", "@ivanIvanov", 123456789L, 987654321L);
         ResponseEntity<User> response = formingUrl(constructionUriBuilderCreation().build().toUri(), user);
         checkingTheUsersForCreation(user, response);
         User findUser = response.getBody();

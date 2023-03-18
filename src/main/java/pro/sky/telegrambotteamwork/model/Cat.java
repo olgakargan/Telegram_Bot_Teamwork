@@ -28,4 +28,7 @@ public class Cat {
     private int yearOfBirth;
     @Column(name = "description")
     private String description;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+    private Image imageCat;
 }
