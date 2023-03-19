@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.awt.*;
 
 /**
  * Класс с сущностью домашнего питомца
@@ -38,4 +37,7 @@ public class Pet {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
     private Image imagePet;
+
+    public Pet(long l, String бони, String волнистый_попугай, int i, String описание) {
+    }
 }

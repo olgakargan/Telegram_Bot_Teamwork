@@ -1,4 +1,5 @@
 package pro.sky.telegrambotteamwork.repository;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,5 +15,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Collection<User> findUserByUserId(@Param("userId") Long userId);
 
     Collection<User> findUserByRole(Role role);
-
 }

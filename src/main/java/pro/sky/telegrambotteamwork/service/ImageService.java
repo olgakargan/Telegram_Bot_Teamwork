@@ -20,6 +20,26 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import pro.sky.telegrambotteamwork.model.Cat;
+import pro.sky.telegrambotteamwork.model.Dog;
+import pro.sky.telegrambotteamwork.model.Image;
+import pro.sky.telegrambotteamwork.model.Pet;
+import pro.sky.telegrambotteamwork.repository.ImageRepository;
+
+import javax.imageio.ImageIO;
+import javax.transaction.Transactional;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 /**
