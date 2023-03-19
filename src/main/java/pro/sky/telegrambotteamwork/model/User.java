@@ -30,6 +30,8 @@ public class User {
     private String userName;
     @Column(name = "user_id")
     private Long userId;
+    @Column(name = "phone")
+    private String phone;
     @Column(name = "chat_id")
     private Long chatId;
     @Column(name = "date_time")

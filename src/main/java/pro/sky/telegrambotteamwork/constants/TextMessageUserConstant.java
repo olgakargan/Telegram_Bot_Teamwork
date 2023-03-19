@@ -4,7 +4,7 @@ import static pro.sky.telegrambotteamwork.constants.CommandMessageUserConstant.*
 
 public class TextMessageUserConstant {
 
-    public static final String SUBSCRIBE_TO_BOT_MESSAGE = "Здравствуй друг! Для того, что бы продолжить пользоваться ботом вам необходимо подписаться. Подпишитесь и вы узнаете много интересной информации!";
+    public static final String SUBSCRIBE_TO_BOT_MESSAGE = "Здравствуй друг! Для того, что бы продолжить пользоваться ботом вам необходимо подписаться. Подписавшись, вы соглашаетесь, что выши персональные данные будут переданы боту. Подпишитесь и вы узнаете много интересной информации!";
     public static final String WELCOME_MESSAGE = "Мы приют для бездомных животных \"ЗООПОМОЩЬ\", расположенный в городе Астане. Мы хотим помочь людям, которые задумываются о том, чтобы забрать собаку или кошку домой. Какого питомца вы хотите приютить?";
     public static final String DOG_MESSAGE = "Отличный выбор! Какую информацию вы хотите получить для того, чтобы взять из приюта собаку?";
     public static final String CAT_MESSAGE = "Отличный выбор! Какую информацию вы хотите получить для того, чтобы взять из приюта кошку?";
@@ -41,7 +41,7 @@ public class TextMessageUserConstant {
 
     // Подписка пользователя на бота
     public static final String YOU_ARE_SUBSCRIBED = "Вы уже подписаны на нашего бота";
-    public static final String YOU_HAVE_SUBSCRIBED = "Вы только что подписались на нашего бота! Поздравляем!";
+    public static final String YOU_HAVE_SUBSCRIBED = "Вы только что подписались на нашего бота! Поздравляем! Для продолжения работы с ботом введите команду " + START;
     public static final String ARE_YOU_VOLUNTEER = "Вас только что сделали волонтером! Поздравляем!";
 
     // Меню для волонтеров

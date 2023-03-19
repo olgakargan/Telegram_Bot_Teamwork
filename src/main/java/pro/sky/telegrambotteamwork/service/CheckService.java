@@ -42,7 +42,7 @@ public class CheckService {
      */
     public boolean hasContact(Update update) {
         logger.info("Вызван метод проверки наличия запроса контактной информации от пользователя");
-        return update.callbackQuery().message().contact() != null;
+        return update.message().contact() != null;
     }
 
     /**

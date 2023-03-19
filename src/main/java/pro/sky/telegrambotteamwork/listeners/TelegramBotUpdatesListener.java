@@ -65,18 +65,23 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 Collection<User> rolesUser = userRepository.findUserByRole(Role.ROLE_USER);
                 Collection<User> rolesVolunteer = userRepository.findUserByRole(Role.ROLE_VOLUNTEER);
 
-                if (!rolesUser.isEmpty() || rolesUser.isEmpty() && rolesVolunteer.isEmpty()) {
+                if (rolesUser.isEmpty() && rolesVolunteer.isEmpty()) {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
-                            telegramBot.execute(menuService.loadingTheMenu(messageUser, SUBSCRIBE_TO_BOT_MESSAGE, SUBSCRIPTION_MENU));
+                            telegramBot.execute(menuService.loadingTheMenuSubscribe(update, SUBSCRIBE_TO_BOT_MESSAGE));
+                        }
+                    } else if (checkService.hasContact(update)) {
+                        userService.saveUser(user, update);
+                    }
+                } else if (!rolesUser.isEmpty()) {
+                    if (checkService.hasMessage(update) && checkService.hasText(update)) {
+                        if (START.equals(messageUser.text())) {
+                            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
                         } else {
                             addReportDataMenu(update);
                         }
                     } else if (checkService.hasCallbackQuery(update)) {
-                        if (SUBSCRIPTION.equals(update.callbackQuery().data())) {
-                            userService.saveUser(user, update);
-                            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
-                        } else if (DOG.equals(update.callbackQuery().data())) {
+                        if (DOG.equals(update.callbackQuery().data())) {
                             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, DOG_MESSAGE, MAIN_DOG_MENU));
                         } else if (CAT.equals(update.callbackQuery().data())) {
                             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
@@ -142,7 +147,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (CALL_A_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CALL_A_VOLUNTEER_MESSAGE, CALL_A_VOLUNTEER_DOG_MENU));
         } else if (GO_BACK_DOG.equals(update.callbackQuery().data())) {
-            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
+            telegramBot.execute(menuService.loadingTheMenuDogAndCatCallbackQuery(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
         }
     }
 
@@ -161,7 +166,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (CALL_A_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CALL_A_VOLUNTEER_MESSAGE, CALL_A_VOLUNTEER_CAT_MENU));
         } else if (GO_BACK_CAT.equals(update.callbackQuery().data())) {
-            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
+            telegramBot.execute(menuService.loadingTheMenuDogAndCatCallbackQuery(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
         }
     }
 
