@@ -6,16 +6,20 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.SendPhoto;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.enums.Role;
+import pro.sky.telegrambotteamwork.model.ReportData;
 import pro.sky.telegrambotteamwork.model.User;
+import pro.sky.telegrambotteamwork.repository.ImageRepository;
 import pro.sky.telegrambotteamwork.repository.UserRepository;
 import pro.sky.telegrambotteamwork.service.*;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,6 +35,7 @@ import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.*;
 @AllArgsConstructor
 public class TelegramBotUpdatesListener implements UpdatesListener {
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
+    private final static File address = new File("images/adress.jpg");
     private final TelegramBot telegramBot;
     private final MenuService menuService;
     private final UserService userService;
@@ -39,6 +44,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final DogService dogService;
     private final CatService catService;
     private final ReportDataService reportDataService;
+    private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
     /**
      * Метод, который вызывается сразу после инициализации свойств
@@ -62,21 +69,27 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 logger.info("Запрос от пользователя: {}", update);
                 Message messageUser = update.message();
                 User user = new User();
+                ReportData reportData = new ReportData();
                 Collection<User> rolesUser = userRepository.findUserByRole(Role.ROLE_USER);
                 Collection<User> rolesVolunteer = userRepository.findUserByRole(Role.ROLE_VOLUNTEER);
 
-                if (!rolesUser.isEmpty() || rolesUser.isEmpty() && rolesVolunteer.isEmpty()) {
+                if (rolesUser.isEmpty() && rolesVolunteer.isEmpty()) {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
-                            telegramBot.execute(menuService.loadingTheMenu(messageUser, SUBSCRIBE_TO_BOT_MESSAGE, SUBSCRIPTION_MENU));
+                            telegramBot.execute(menuService.loadingTheMenuSubscribe(update, SUBSCRIBE_TO_BOT_MESSAGE));
+                        }
+                    } else if (checkService.hasContact(update)) {
+                        userService.saveUser(user, update);
+                    }
+                } else if (!rolesUser.isEmpty()) {
+                    if (checkService.hasMessage(update) && checkService.hasText(update)) {
+                        if (START.equals(messageUser.text())) {
+                            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
                         } else {
                             addReportDataMenu(update);
                         }
                     } else if (checkService.hasCallbackQuery(update)) {
-                        if (SUBSCRIPTION.equals(update.callbackQuery().data())) {
-                            userService.saveUser(user, update);
-                            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
-                        } else if (DOG.equals(update.callbackQuery().data())) {
+                        if (DOG.equals(update.callbackQuery().data())) {
                             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, DOG_MESSAGE, MAIN_DOG_MENU));
                         } else if (CAT.equals(update.callbackQuery().data())) {
                             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
@@ -142,7 +155,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (CALL_A_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CALL_A_VOLUNTEER_MESSAGE, CALL_A_VOLUNTEER_DOG_MENU));
         } else if (GO_BACK_DOG.equals(update.callbackQuery().data())) {
-            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
+            telegramBot.execute(menuService.loadingTheMenuDogAndCatCallbackQuery(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
         }
     }
 
@@ -161,7 +174,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (CALL_A_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CALL_A_VOLUNTEER_MESSAGE, CALL_A_VOLUNTEER_CAT_MENU));
         } else if (GO_BACK_CAT.equals(update.callbackQuery().data())) {
-            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
+            telegramBot.execute(menuService.loadingTheMenuDogAndCatCallbackQuery(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
         }
     }
 
@@ -184,6 +197,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (REQUISITES_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REQUISITES_MESSAGE));
         } else if (CONTACTS_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendPhoto(update.callbackQuery().message().chat().id(), address));
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), CONTACTS_MESSAGE));
         } else if (SECURITY_CONTACTS_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Контакты охраны для собак"));
@@ -211,6 +225,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (REQUISITES_CAT.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REQUISITES_MESSAGE));
         } else if (CONTACTS_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendPhoto(update.callbackQuery().message().chat().id(), address));
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), CONTACTS_MESSAGE));
         } else if (SECURITY_CONTACTS_CAT.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Контакты охраны для кошек"));
@@ -395,7 +410,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_REPORT_DATA_MESSAGE));
         } else {
             reportDataService.saveReportData(update, update.message().text());
-            telegramBot.execute(new SendMessage(update.message().chat().id(), MESSAGE_AFTER_ADDING_REPORT_DATA));
         }
     }
 

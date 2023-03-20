@@ -16,7 +16,8 @@ import pro.sky.telegrambotteamwork.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.*;
+import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.ARE_YOU_VOLUNTEER;
+import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.YOU_HAVE_SUBSCRIBED;
 
 /**
  * Серивис-класс для всех пользователей ботом
@@ -36,28 +37,25 @@ public class UserService {
      * @return Возвращает сохраненного пользователя
      */
     public void saveUser(User user, Update update) {
-        String firstName = update.callbackQuery().from().firstName();
-        String lastName = update.callbackQuery().from().lastName();
-        String userName = update.callbackQuery().from().username();
-        Long userId = update.callbackQuery().message().from().id();
-        Long chatId = update.callbackQuery().message().chat().id();
+        String firstName = update.message().contact().firstName();
+        String lastName = update.message().contact().lastName();
+        String userName = update.message().from().username();
+        Long userId = update.message().contact().userId();
+        String phone = update.message().contact().phoneNumber();
+        Long chatId = update.message().chat().id();
         LocalDateTime dateTime = LocalDateTime.now();
-        Collection<User> usersUserId = userRepository.findUserByUserId(userId);
-        if (!usersUserId.isEmpty()) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), YOU_ARE_SUBSCRIBED));
-            return;
-        } else {
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setUserName(userName);
-            user.setUserId(userId);
-            user.setChatId(chatId);
-            user.setDateTime(dateTime);
-            user.setRole(Role.ROLE_USER);
-            userRepository.save(user);
-            telegramBot.execute(new SendMessage(chatId, YOU_HAVE_SUBSCRIBED));
-            logger.info("Ползователь сохранен в базу данных: {}", user);
-        }
+
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setUserName(userName);
+        user.setUserId(userId);
+        user.setPhone(phone);
+        user.setChatId(chatId);
+        user.setDateTime(dateTime);
+        user.setRole(Role.ROLE_USER);
+        userRepository.save(user);
+        telegramBot.execute(new SendMessage(chatId, YOU_HAVE_SUBSCRIBED));
+        logger.info("Ползователь сохранен в базу данных: {}", user);
     }
 
     /**

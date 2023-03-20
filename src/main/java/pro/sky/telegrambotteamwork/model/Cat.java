@@ -31,4 +31,12 @@ public class Cat {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
     private Image imageCat;
+
+    public Cat(Long id, String catName, String breed, int yearOfBirth, String description) {
+        this.id = id;
+        this.catName = catName;
+        this.breed = breed;
+        this.yearOfBirth = yearOfBirth;
+        this.description = description;
+    }
 }

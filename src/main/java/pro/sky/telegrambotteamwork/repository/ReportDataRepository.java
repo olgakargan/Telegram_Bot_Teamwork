@@ -7,6 +7,9 @@ import pro.sky.telegrambotteamwork.model.ReportData;
 
 import java.util.Set;
 
+/**
+ * Класс-репозиторий для работы с методами составленного отчета
+ */
 @Repository
 public interface ReportDataRepository extends JpaRepository<ReportData, Long> {
 
