@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 import pro.sky.telegrambotteamwork.model.Cat;
+import pro.sky.telegrambotteamwork.model.Image;
 
 import java.net.URI;
 
@@ -28,14 +29,14 @@ public class CatControllerTests {
 
     @Test
     public void addCatTest() {
-        Cat cat = new Cat(1L, "Алекс", "Британский", 2, "Описание");
+        Cat cat = new Cat(1L, "Алекс", "Британский", 2, "Описание",new Image());
         ResponseEntity<Cat> response = formingUrl(constructionUriBuilderCreation().build().toUri(), cat);
         checkingTheCatsForCreation(cat, response);
     }
 
     @Test
     public void updateCatTest() {
-        Cat cat = new Cat(1L, "Алекс", "Британский", 2, "Описание");
+        Cat cat = new Cat(1L, "Алекс", "Британский", 2, "Описание", new Image());
         ResponseEntity<Cat> response = formingUrl(constructionUriBuilderCreation().build().toUri(), cat);
         checkingTheCatsForCreation(cat, response);
 
@@ -57,7 +58,7 @@ public class CatControllerTests {
 
     @Test
     public void findCatTest() {
-        Cat cat = new Cat(1L, "Алекс", "Британский", 2, "Описание");
+        Cat cat = new Cat(1L, "Алекс", "Британский", 2, "Описание", new Image());
         ResponseEntity<Cat> response = formingUrl(constructionUriBuilderCreation().build().toUri(), cat);
         checkingTheCatsForCreation(cat, response);
         Cat findCat = response.getBody();
