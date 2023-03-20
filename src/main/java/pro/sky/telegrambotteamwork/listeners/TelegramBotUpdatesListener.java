@@ -6,16 +6,20 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.SendPhoto;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.enums.Role;
+import pro.sky.telegrambotteamwork.model.ReportData;
 import pro.sky.telegrambotteamwork.model.User;
+import pro.sky.telegrambotteamwork.repository.ImageRepository;
 import pro.sky.telegrambotteamwork.repository.UserRepository;
 import pro.sky.telegrambotteamwork.service.*;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,6 +35,7 @@ import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.*;
 @AllArgsConstructor
 public class TelegramBotUpdatesListener implements UpdatesListener {
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
+    private final static File address = new File("images/adress.jpg");
     private final TelegramBot telegramBot;
     private final MenuService menuService;
     private final UserService userService;
@@ -39,6 +44,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final DogService dogService;
     private final CatService catService;
     private final ReportDataService reportDataService;
+    private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
     /**
      * Метод, который вызывается сразу после инициализации свойств
@@ -62,6 +69,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 logger.info("Запрос от пользователя: {}", update);
                 Message messageUser = update.message();
                 User user = new User();
+                ReportData reportData = new ReportData();
                 Collection<User> rolesUser = userRepository.findUserByRole(Role.ROLE_USER);
                 Collection<User> rolesVolunteer = userRepository.findUserByRole(Role.ROLE_VOLUNTEER);
 
@@ -189,6 +197,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (REQUISITES_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REQUISITES_MESSAGE));
         } else if (CONTACTS_DOG.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendPhoto(update.callbackQuery().message().chat().id(), address));
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), CONTACTS_MESSAGE));
         } else if (SECURITY_CONTACTS_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Контакты охраны для собак"));
@@ -216,6 +225,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (REQUISITES_CAT.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), REQUISITES_MESSAGE));
         } else if (CONTACTS_CAT.equals(update.callbackQuery().data())) {
+            telegramBot.execute(new SendPhoto(update.callbackQuery().message().chat().id(), address));
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), CONTACTS_MESSAGE));
         } else if (SECURITY_CONTACTS_CAT.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Контакты охраны для кошек"));
@@ -400,7 +410,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_REPORT_DATA_MESSAGE));
         } else {
             reportDataService.saveReportData(update, update.message().text());
-            telegramBot.execute(new SendMessage(update.message().chat().id(), MESSAGE_AFTER_ADDING_REPORT_DATA));
         }
     }
 

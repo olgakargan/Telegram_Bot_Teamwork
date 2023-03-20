@@ -26,10 +26,10 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     Optional<Image> findByCatId(Long catId);
 
     /**
-     * Метод для поиска питомца по идентификатору
+     * Метод для поиска отчета по идентификатору
      *
-     * @param petId идентификатор искомого питомца
-     * @return Возвращает найденного питомца
+     * @param reportDataId идентификатор искомого отчета
+     * @return Возвращает найденный отчет
      */
-    Optional<Image> findByPetId(Long petId);
+    Optional<Image> findByReportDataId(Long reportDataId);
 }
