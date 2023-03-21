@@ -9,9 +9,11 @@ import pro.sky.telegrambotteamwork.model.User;
 
 import java.util.Collection;
 
+
 /**
  * Класс-репозиторий для работы с методами всех пользователей
  */
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     /**
@@ -23,6 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT * FROM users WHERE user_id = :userId", nativeQuery = true)
     Collection<User> findUserByUserId(@Param("userId") Long userId);
 
+
     /**
      * Этот метод ищет всех пользователей разделенных по ролям
      *
@@ -30,4 +33,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return Возвращает всех пользователей с соответствующей ролью
      */
     Collection<User> findUserByRole(Role role);
+
+    Collection<User> findAllByPhone(String phone);
+
+
+
 }

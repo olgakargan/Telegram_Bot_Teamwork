@@ -1,5 +1,18 @@
 package pro.sky.telegrambotteamwork.service;
 
+
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.SendMessage;
+import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import pro.sky.telegrambotteamwork.enums.Role;
+import pro.sky.telegrambotteamwork.model.User;
+import pro.sky.telegrambotteamwork.repository.UserRepository;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -123,3 +136,4 @@ public class UserService {
     }
 
 }
+
