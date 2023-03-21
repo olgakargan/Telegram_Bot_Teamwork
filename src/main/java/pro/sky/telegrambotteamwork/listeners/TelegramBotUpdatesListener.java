@@ -3,19 +3,14 @@ package pro.sky.telegrambotteamwork.listeners;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
-//import com.pengrad.telegrambot.model.File;
 import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.GetFile;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SendPhoto;
-import com.pengrad.telegrambot.response.GetFileResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import pro.sky.telegrambotteamwork.enums.Role;
 import pro.sky.telegrambotteamwork.model.ReportData;
 import pro.sky.telegrambotteamwork.model.User;
@@ -37,6 +32,7 @@ import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.*;
  * Основной класс с логикой телеграм-бота.
  * Этот класс расширяет {@link UpdatesListener}
  */
+
 @Service
 @AllArgsConstructor
 public class TelegramBotUpdatesListener implements UpdatesListener {
@@ -416,28 +412,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_REPORT_DATA_MESSAGE));
         } else {
             reportDataService.saveReportData(update, update.message().text());
-        }
-    }
-
-
-    //Получение файла от пользователя в базу
-    private void getFileFromUser(Update update) {
-        PhotoSize[] photoSizes = update.message().photo();   //создаём массив байтов для файла фотки
-        if (photoSizes !=null) {
-            for (PhotoSize photoSize : photoSizes) {
-                GetFile getFile = new GetFile(photoSize.fileId());
-                GetFileResponse getFileResponse = telegramBot.execute(getFile);
-                if (getFileResponse.isOk()) {
-                    com.pengrad.telegrambot.model.File file = getFileResponse.file();
-                    String extension = StringUtils.getFilenameExtension(file.filePath());
-                    try {
-                        byte[] image = telegramBot.getFileContent(file);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                }
-            }
         }
     }
 
