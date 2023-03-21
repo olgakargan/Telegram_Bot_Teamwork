@@ -31,6 +31,11 @@ public class Cat {
     @JoinColumn(name = "image_id")
     private Image imageCat;
 
-    public Cat(long l, String алекс, String британский, int i, String описание) {
+    public Cat(Long id, String catName, String breed, int yearOfBirth, String description) {
+        this.id = id;
+        this.catName = catName;
+        this.breed = breed;
+        this.yearOfBirth = yearOfBirth;
+        this.description = description;
     }
 }

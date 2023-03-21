@@ -2,9 +2,7 @@ package pro.sky.telegrambotteamwork.service;
 
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import com.pengrad.telegrambot.model.request.Keyboard;
+import com.pengrad.telegrambot.model.request.*;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +58,7 @@ public class MenuService {
      * @param message      вся необходимая информация о пользователе, написавшем сообщение боту
      * @param messageText  текстовое сообщение
      * @param listOfButton список кнопок
-     * @return Отправленное новое сообщение от бота
+     * @return Отправленное новое сообщение от бота с загрузкой меню
      */
     public SendMessage loadingTheMenu(Message message, String messageText, List<String> listOfButton) {
         logger.info("Вызван метод загрузки меню приветственного сообщения");
@@ -74,7 +72,7 @@ public class MenuService {
      * @param update       входящее обновление
      * @param messageText  текстовое сообщение
      * @param listOfButton список кнопок
-     * @return Отправленное новое сообщение от бота
+     * @return Отправленное новое сообщение от бота с загрузкой меню
      */
     public SendMessage loadingTheMenuCallbackQuery(Update update, String messageText, List<String> listOfButton) {
         logger.info("Вызван метод загрузки меню после нажатия кнопки");
@@ -83,17 +81,50 @@ public class MenuService {
     }
 
     /**
-     * Этот метод загружает вложенное меню для собак и кошек
+     * Этот метод загружает меню для собак и кошек
      *
      * @param update       входящее обновление
      * @param messageText  текстовое сообщение
      * @param listOfButton список кнопок
-     * @return Отправленное новое сообщение от бота
+     * @return Отправленное новое сообщение от бота с загрузкой меню
      */
     public SendMessage loadingTheMenuDogAndCat(Update update, String messageText, List<String> listOfButton) {
         logger.info("Вызван метод загрузки меню для выбора питомца");
         Keyboard keyboard = keyboardDogAndCat(listOfButton);
+        return new SendMessage(update.message().chat().id(), messageText).replyMarkup(keyboard);
+    }
+
+    /**
+     * Этот метод загружает меню для собак и кошек, после нажатия кнопки
+     *
+     * @param update       входящее обновление
+     * @param messageText  текстовое сообщение
+     * @param listOfButton список кнопок
+     * @return Отправленное новое сообщение от бота с загрузкой меню
+     */
+    public SendMessage loadingTheMenuDogAndCatCallbackQuery(Update update, String messageText, List<String> listOfButton) {
+        logger.info("Вызван метод загрузки меню, после нажатия кнопки для выбора питомца");
+        Keyboard keyboard = keyboardDogAndCat(listOfButton);
         return new SendMessage(update.callbackQuery().message().chat().id(), messageText).replyMarkup(keyboard);
+    }
+
+    /**
+     * Этот метод загружает всего одну кнопку с предложением пользователю подписаться на бот.
+     * Этот метод разрешает получать контактную информацию от пользователя
+     *
+     * @param update      входящее обновление
+     * @param messageText текстовое сообщение
+     * @return Отправленное новое сообщение от бота с загрузкой кнопки "Подписаться"
+     */
+    public SendMessage loadingTheMenuSubscribe(Update update, String messageText) {
+        KeyboardButton keyboardButton = new KeyboardButton("Подписаться");
+        keyboardButton.requestContact(true);
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(keyboardButton)
+                .oneTimeKeyboard(true)
+                .selective(true)
+                .resizeKeyboard(true);
+
+        return new SendMessage(update.message().chat().id(), messageText).replyMarkup(replyKeyboardMarkup);
     }
 
 }
