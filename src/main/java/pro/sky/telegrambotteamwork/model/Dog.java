@@ -30,9 +30,6 @@ public class Dog {
     private String floor;
     @Column(name = "description")
     private String description;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_id")
-    private Image imageDog;
 
     public Dog(Long id, String dogName, String breed, int yearOfBirth, String description) {
         this.id = id;

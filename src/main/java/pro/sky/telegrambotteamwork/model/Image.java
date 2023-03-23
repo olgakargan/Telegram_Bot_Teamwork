@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @Table(name = "images")
@@ -24,10 +25,14 @@ public class Image {
     private String mediaType;
     @Lob
     private byte[] bytes;
-    @OneToOne(mappedBy = "image")
+    @Column(name = "chat_id")
+    private Long chatId;
+    @Column(name = "date_and_time")
+    private LocalDateTime dateTime;
+    @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private ReportData reportData;
-    @OneToOne(mappedBy = "imageCat")
+    @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private Cat cat;
-    @OneToOne(mappedBy = "imageDog")
+    @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private Dog dog;
 }

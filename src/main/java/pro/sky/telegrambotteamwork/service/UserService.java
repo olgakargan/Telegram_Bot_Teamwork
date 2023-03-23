@@ -16,8 +16,7 @@ import pro.sky.telegrambotteamwork.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.ARE_YOU_VOLUNTEER;
-import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.YOU_HAVE_SUBSCRIBED;
+import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.*;
 
 /**
  * Серивис-класс для всех пользователей ботом
@@ -120,6 +119,13 @@ public class UserService {
             throw new NullPointerException();
         }
         return user;
+    }
+
+    public void findUserByRoleVolunteer(Update update, Long chatId, String message) {
+        Collection<User> users = userRepository.findUserByRole(Role.ROLE_VOLUNTEER);
+        for (User user : users) {
+            telegramBot.execute(new SendMessage(chatId, RESPONSE_TO_VOLUNTEER_FROM_USER_MESSAGE + update.message().from().username() + RESPONSE_TO_VOLUNTEER_FROM_USER_MESSAGE_2 + message));
+        }
     }
 
 }

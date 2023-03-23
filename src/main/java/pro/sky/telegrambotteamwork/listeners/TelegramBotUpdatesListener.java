@@ -12,14 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.enums.Role;
-import pro.sky.telegrambotteamwork.model.ReportData;
 import pro.sky.telegrambotteamwork.model.User;
-import pro.sky.telegrambotteamwork.repository.ImageRepository;
 import pro.sky.telegrambotteamwork.repository.UserRepository;
 import pro.sky.telegrambotteamwork.service.*;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -45,7 +44,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final CatService catService;
     private final ReportDataService reportDataService;
     private final ImageService imageService;
-    private final ImageRepository imageRepository;
 
     /**
      * Метод, который вызывается сразу после инициализации свойств
@@ -69,7 +67,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 logger.info("Запрос от пользователя: {}", update);
                 Message messageUser = update.message();
                 User user = new User();
-                ReportData reportData = new ReportData();
                 Collection<User> rolesUser = userRepository.findUserByRole(Role.ROLE_USER);
                 Collection<User> rolesVolunteer = userRepository.findUserByRole(Role.ROLE_VOLUNTEER);
 
@@ -107,6 +104,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             catReportMenu(update);
                             callVolunteerCatMenu(update);
                         }
+                    } else if (checkService.hasPhoto(update) && checkService.hasMessage(update) && checkService.hasCaption(update)) {
+                        try {
+                            imageService.saveImageReportData(update);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
                 if (!rolesVolunteer.isEmpty()) {
@@ -129,6 +132,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         } else {
                             informationMenuVolunteer(update);
                             addPetMenuVolunteer(update);
+                        }
+                    } else if (checkService.hasPhoto(update) && checkService.hasMessage(update) && checkService.hasCaption(update)) {
+                        try {
+                            imageService.saveImageDog(update);
+                            imageService.saveImageCat(update);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 }
@@ -313,9 +323,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     private void callVolunteerDogMenu(Update update) {
         if (QUESTION_TO_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Вопрос волонтеру о собаке"));
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), QUESTION_TO_VOLUNTEER_MESSAGE));
         } else if (BECOME_A_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Стать волонтером по собакам"));
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), BECOME_A_VOLUNTEER));
         } else if (GO_BACK_CALL_A_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, DOG_MESSAGE, MAIN_DOG_MENU));
         }
@@ -328,9 +338,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     private void callVolunteerCatMenu(Update update) {
         if (QUESTION_TO_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Вопрос волонтеру о кошке"));
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), QUESTION_TO_VOLUNTEER_MESSAGE));
         } else if (BECOME_A_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Стать волонтером по кошкам"));
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), BECOME_A_VOLUNTEER));
         } else if (GO_BACK_CALL_A_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
         }
@@ -379,7 +389,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (ADD_DOG_BD_COMMAND.equals(update.message().text())) {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_DOG_MESSAGE));
         } else {
-            dogService.saveDog(update.message().text());
+            dogService.saveDog(update);
         }
     }
 
@@ -394,7 +404,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (ADD_CAT_BD_COMMAND.equals(update.message().text())) {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_CAT_MESSAGE));
         } else {
-            catService.saveCat(update.message().text());
+            catService.saveCat(update);
         }
     }
 

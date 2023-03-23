@@ -1,5 +1,8 @@
 package pro.sky.telegrambotteamwork.service;
 
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,9 @@ import pro.sky.telegrambotteamwork.repository.DogRepository;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESSAGE_AFTER_ADDING_TEXT_DOG;
+import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESSAGE_AFTER_ADDING_TEXT_DOG_2;
+
 /**
  * Сервис-класс для манипуляций с питомцем - собакой
  */
@@ -21,6 +27,7 @@ import java.util.regex.Pattern;
 public class DogService {
     private final Logger logger = LoggerFactory.getLogger(DogService.class);
     private final DogRepository dogRepository;
+    private final TelegramBot telegramBot;
     private static final Pattern PATTERN = Pattern.compile("([\\W+]+)(\\/)([\\W+]+)(\\/)([0-9]{4})(\\/)([\\W+]+)(\\/)([\\W+]+)");
 
     /**
@@ -82,10 +89,10 @@ public class DogService {
      * с помощью регулярного выражения эти данные расчленяются и записываются в переменные,
      * а затем в базу данных.
      *
-     * @param message текстовое сообщение от волонтера
+     * @param update входящее обновление
      */
-    public void saveDog(String message) {
-        Matcher matcher = PATTERN.matcher(message);
+    public void saveDog(Update update) {
+        Matcher matcher = PATTERN.matcher(update.message().text());
 
         if (matcher.matches()) {
             Dog dog = new Dog();
@@ -101,6 +108,7 @@ public class DogService {
             dog.setFloor(floor);
             dog.setDescription(description);
             dogRepository.save(dog);
+            telegramBot.execute(new SendMessage(update.message().chat().id(), MESSAGE_AFTER_ADDING_TEXT_DOG + dog.getId() + MESSAGE_AFTER_ADDING_TEXT_DOG_2));
             logger.info("Новый профиль собаки сохранен: " + dog);
         }
     }
