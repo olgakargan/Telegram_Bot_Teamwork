@@ -29,9 +29,6 @@ public class ReportData {
     private Integer day;
     @Column(name = "date_and_time")
     private LocalDateTime dateTime;
-    //    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "image_id")
-//    private Image image;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "report_data_id")
     private User user;

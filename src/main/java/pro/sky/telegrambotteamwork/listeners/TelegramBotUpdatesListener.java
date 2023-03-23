@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.enums.Role;
 import pro.sky.telegrambotteamwork.model.User;
-import pro.sky.telegrambotteamwork.repository.ImageRepository;
 import pro.sky.telegrambotteamwork.repository.UserRepository;
 import pro.sky.telegrambotteamwork.service.*;
 
@@ -45,7 +44,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final CatService catService;
     private final ReportDataService reportDataService;
     private final ImageService imageService;
-    private final ImageRepository imageRepository;
 
     /**
      * Метод, который вызывается сразу после инициализации свойств
@@ -325,9 +323,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     private void callVolunteerDogMenu(Update update) {
         if (QUESTION_TO_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Вопрос волонтеру о собаке"));
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), QUESTION_TO_VOLUNTEER_MESSAGE));
         } else if (BECOME_A_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Стать волонтером по собакам"));
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), BECOME_A_VOLUNTEER));
         } else if (GO_BACK_CALL_A_VOLUNTEER_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, DOG_MESSAGE, MAIN_DOG_MENU));
         }
@@ -340,9 +338,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     private void callVolunteerCatMenu(Update update) {
         if (QUESTION_TO_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Вопрос волонтеру о кошке"));
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), QUESTION_TO_VOLUNTEER_MESSAGE));
         } else if (BECOME_A_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Стать волонтером по кошкам"));
+            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), BECOME_A_VOLUNTEER));
         } else if (GO_BACK_CALL_A_VOLUNTEER_CAT.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
         }
