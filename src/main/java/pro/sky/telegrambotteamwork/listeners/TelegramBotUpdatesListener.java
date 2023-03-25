@@ -5,6 +5,8 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.KeyboardButton;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SendPhoto;
 import lombok.AllArgsConstructor;
@@ -79,6 +81,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
                             telegramBot.execute(menuService.loadingTheMenuSubscribe(update, SUBSCRIBE_TO_BOT_MESSAGE));
+
                         }
                     } else if (checkService.hasContact(update)) {
                         userService.saveUser(user, update);
@@ -86,7 +89,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 } else if (!rolesUser.isEmpty()) {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
-                            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
+                            //меняю на прямой вызов без меню
+                            telegramBot.execute(new SendMessage(update.message().chat().id(), WELCOME_MESSAGE)); //(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
                         } else {
                             addReportDataMenu(update);
                         }
@@ -114,7 +118,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 if (!rolesVolunteer.isEmpty()) {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
-                            telegramBot.execute(menuService.loadingTheMenu(messageUser, WELCOME_VOLUNTEER_MESSAGE, MAIN_VOLUNTEER_MENU));
+                            // заменяю вывод без меню
+                            telegramBot.execute(new SendMessage(messageUser.chat().id(), WELCOME_VOLUNTEER_MESSAGE)); //(menuService.loadingTheMenu(messageUser, WELCOME_VOLUNTEER_MESSAGE, MAIN_VOLUNTEER_MENU));
                         } else {
                             addDogMenu(update);
                             addCatMenu(update);

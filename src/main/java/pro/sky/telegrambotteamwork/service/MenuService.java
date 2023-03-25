@@ -117,6 +117,7 @@ public class MenuService {
      * @return Отправленное новое сообщение от бота с загрузкой кнопки "Подписаться"
      */
     public SendMessage loadingTheMenuSubscribe(Update update, String messageText) {
+        logger.info("Вызван метод загрузки меню подписки на бот");
         KeyboardButton keyboardButton = new KeyboardButton("Подписаться");
         keyboardButton.requestContact(true);
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(keyboardButton)
