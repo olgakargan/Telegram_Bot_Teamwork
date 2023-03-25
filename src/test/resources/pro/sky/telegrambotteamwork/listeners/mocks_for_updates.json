@@ -1,9 +1,7 @@
 {
   "message": {
-    "message_id": "333",
-    "chat": {
-      "id": "121",
-      "first_name": "Николай"
+        "chat": {
+      "id": "121"
     },
     "text": "%command%"
   }

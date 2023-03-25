@@ -89,8 +89,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 } else if (!rolesUser.isEmpty()) {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
-                            //меняю на прямой вызов без меню
-                            telegramBot.execute(new SendMessage(update.message().chat().id(), WELCOME_MESSAGE)); //(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
+                            telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
                         } else {
                             addReportDataMenu(update);
                         }
@@ -118,8 +117,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 if (!rolesVolunteer.isEmpty()) {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
-                            // заменяю вывод без меню
-                            telegramBot.execute(new SendMessage(messageUser.chat().id(), WELCOME_VOLUNTEER_MESSAGE)); //(menuService.loadingTheMenu(messageUser, WELCOME_VOLUNTEER_MESSAGE, MAIN_VOLUNTEER_MENU));
+                            telegramBot.execute(menuService.loadingTheMenu(messageUser, WELCOME_VOLUNTEER_MESSAGE, MAIN_VOLUNTEER_MENU));
                         } else {
                             addDogMenu(update);
                             addCatMenu(update);

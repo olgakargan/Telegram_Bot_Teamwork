@@ -1,42 +1,5 @@
 package pro.sky.telegrambotteamwork.listeners;
 
-//    @BeforeEach
-//    public void init() {
-//        MockitoAnnotations.initMocks(this);
-//    }
-//
-//    @Test
-//    public void testProcess() throws Exception {
-//        Update update = mock(Update.class);
-//        Message message = mock(Message.class);
-//        User user = mock(User.class);
-//        ReportData reportData = mock(ReportData.class);
-//        Collection<User> rolesUser = new ArrayList<>();
-//        Collection<User> rolesVolunteer = new ArrayList<>();
-//        List<Update> updates = new ArrayList<>();
-//        updates.add(update);
-//
-//        when(userRepository.findUserByRole(Role.ROLE_USER)).thenReturn(rolesUser);
-//        when(userRepository.findUserByRole(Role.ROLE_VOLUNTEER)).thenReturn(rolesVolunteer);
-//        when(checkService.hasMessage(update)).thenReturn(true);
-//        when(checkService.hasText(update)).thenReturn(true);
-//        when(message.text()).thenReturn("start");
-//        when(update.message()).thenReturn(message);
-//        when(menuService.loadingTheMenuSubscribe(update, "subscribe")).thenReturn(null);
-//
-//        telegramBotUpdatesListener.process(updates);
-//
-//        verify(userRepository).findUserByRole(Role.ROLE_USER);
-//        verify(userRepository).findUserByRole(Role.ROLE_VOLUNTEER);
-//        verify(checkService).hasMessage(update);
-//        verify(checkService).hasText(update);
-//        verify(update.message()).text();
-//        verify(menuService).loadingTheMenuSubscribe(update, "subscribe");
-//        verify(telegramBot).execute(any(SendMessage.class));
-//    }
-//}
-/////////
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -82,8 +45,8 @@ public class TelegramBotUpdatesListenerTest {
     private TelegramBot telegramBot;
 //        @Mock
 //    private MenuService menuService;
-    //    @Mock
-//    private UserService userService;
+        @Mock
+    private UserService userService;
     @Mock
     private CheckService checkService;
     //    @Mock
@@ -103,7 +66,7 @@ private MenuService menuService;
     @InjectMocks
     private TelegramBotUpdatesListener listener;
 
-    @Test
+    @Test  //вариант когда новый пользователь только запускает бот
     public void startTestWhenFirstTimeStart() throws URISyntaxException, IOException {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("mocks_for_updates.json").toURI()));
         Update update = getUpdate(jsonUpdates, START);
@@ -123,7 +86,7 @@ private MenuService menuService;
         assertThat(actualMessage.getParameters().get("text")).isEqualTo(SUBSCRIBE_TO_BOT_MESSAGE);
     }
 
-    @Test
+    @Test  //вариант когда запускает бот волонтёр
     public void startTestWhenUserVolunteer() throws URISyntaxException, IOException {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("mocks_for_updates.json").toURI()));
         Update update = getUpdate(jsonUpdates, START);
@@ -144,7 +107,7 @@ private MenuService menuService;
         assertThat(actualMessage.getParameters().get("text")).isEqualTo(WELCOME_VOLUNTEER_MESSAGE);
     }
 
-    @Test
+    @Test       //вариант когда зарегистрированный пользователь запускает /start
     public void startTestWhenUserNotVolunteer() throws URISyntaxException, IOException {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("mocks_for_updates.json").toURI()));
         Update update = getUpdate(jsonUpdates, START);
@@ -166,114 +129,98 @@ private MenuService menuService;
         assertThat(actualMessage.getParameters().get("text")).isEqualTo(WELCOME_MESSAGE);
     }
 
+@Test  //тестируем сохранение нового пользователя в базу если есть контакты
+        public void testAddUserIfGetContact() throws URISyntaxException, IOException {
+    String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("mocks_for_updates.json").toURI()));
+    Update update = getUpdate(jsonUpdates, START);
+    Collection<User> rolesUser = new ArrayList<>();
+    Collection<User> rolesVolunteer = new ArrayList<>();
+    when(userRepository.findUserByRole(Role.ROLE_USER)).thenReturn(rolesUser);
+    when(userRepository.findUserByRole(Role.ROLE_VOLUNTEER)).thenReturn(rolesVolunteer);
+    when(checkService.hasMessage(update)).thenReturn(false); //это позволит нам пойти в вариант сохранения
+    when(checkService.hasContact(update)).thenReturn(true);
+
+    listener.process(Collections.singletonList(update));
+    verify(userService).saveUser(any(User.class), eq(update));
+}
+
+    @Test       //вариант когда зарегистрированному пользователю показывается меню выбора собака/кошка
+    public void testUserDogOrCattMenu() throws URISyntaxException, IOException {
+        String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("mocks_for_updates.json").toURI()));
+
+        Update update = getUpdate(jsonUpdates, START);
+
+        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        Collection<User> rolesUser = new ArrayList<>();
+        rolesUser.add(user);
+        Collection<User> rolesVolunteer = new ArrayList<>();
+        when(userRepository.findUserByRole(Role.ROLE_USER)).thenReturn(rolesUser);
+        when(userRepository.findUserByRole(Role.ROLE_VOLUNTEER)).thenReturn(rolesVolunteer);
+        when(checkService.hasMessage(update)).thenReturn(true);
+        when(checkService.hasText(update)).thenReturn(true);
+        listener.process(Collections.singletonList(update));
+        ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
+
+        verify(telegramBot).execute(argumentCaptor.capture());
+        SendMessage actualMessage = argumentCaptor.getValue();
+        assertThat(actualMessage.getParameters().get("chat_id")).isEqualTo(121L);
+        assertThat(actualMessage.getParameters().get("text")).isEqualTo(WELCOME_MESSAGE);
+    }
+
+
+    @Test       //вариант когда зарегистрированный пользователь запускает отправку отчёта
+    public void testUserAddingReportMenu() throws URISyntaxException, IOException {
+        String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("mocks_for_updates.json").toURI()));
+
+        Update update = getUpdate(jsonUpdates, ADD_REPORT_DATA_COMMAND);
+
+        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        Collection<User> rolesUser = new ArrayList<>();
+        rolesUser.add(user);
+        Collection<User> rolesVolunteer = new ArrayList<>();
+        when(userRepository.findUserByRole(Role.ROLE_USER)).thenReturn(rolesUser);
+        when(userRepository.findUserByRole(Role.ROLE_VOLUNTEER)).thenReturn(rolesVolunteer);
+        when(checkService.hasMessage(update)).thenReturn(true);
+        when(checkService.hasText(update)).thenReturn(true);
+        listener.process(Collections.singletonList(update));
+        ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
+
+        verify(telegramBot).execute(argumentCaptor.capture());
+        SendMessage actualMessage = argumentCaptor.getValue();
+        assertThat(actualMessage.getParameters().get("chat_id")).isEqualTo(121L);
+        assertThat(actualMessage.getParameters().get("text")).isEqualTo(ADD_REPORT_DATA_PREVIEW_2_MESSAGE);
+        assertThat(actualMessage.getParameters().get("text")).isNotEqualTo(ADD_REPORT_DATA_MESSAGE);
+
+    }
+    @Test       //вариант когда зарегистрированный пользователь запускает отправку отчёта
+    public void testUserMenu() throws URISyntaxException, IOException {
+        String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("callback-query-dog.json.json").toURI()));
+        Update update = getUpdate(jsonUpdates, DOG);
+
+        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        Collection<User> rolesUser = new ArrayList<>();
+        rolesUser.add(user);
+        Collection<User> rolesVolunteer = new ArrayList<>();
+        when(userRepository.findUserByRole(Role.ROLE_USER)).thenReturn(rolesUser);
+        when(userRepository.findUserByRole(Role.ROLE_VOLUNTEER)).thenReturn(rolesVolunteer);
+        when(checkService.hasCallbackQuery(update)).thenReturn(true);
+        listener.process(Collections.singletonList(update));
+        ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
+
+        verify(telegramBot).execute(argumentCaptor.capture());
+        SendMessage actualMessage = argumentCaptor.getValue();
+        assertThat(actualMessage.getParameters().get("chat_id")).isEqualTo(1L);
+        assertThat(actualMessage.getParameters().get("text")).isEqualTo(DOG_MESSAGE);
+
+    }
+
+
+
+
     //метод для формирования апдейтов из json файла с заданным ответом
     private Update getUpdate(String jsonUpdates, String replaced) {
         return BotUtils.fromJson(jsonUpdates.replace("%command%", replaced), Update.class);
     }
 
-    //@Test
-    //    public void editMessageReplyMarkup() {
-    //        String text = "Update" + System.currentTimeMillis();
-    //
-    //        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(new InlineKeyboardButton(text).url("https://google.com"));
-    //        InlineKeyboardMarkup gameKeyboard = new InlineKeyboardMarkup(new InlineKeyboardButton(text).callbackGame("test game"));
-    //
-    //        BaseResponse response = bot.execute(new EditMessageReplyMarkup(chatId, 8124).replyMarkup(keyboard));
-    //        assertTrue(response.isOk());
-    //
-    //        response = bot.execute(new EditMessageReplyMarkup(channelName, 511).replyMarkup(keyboard));
-    //        assertTrue(response.isOk());
-    //
-    //        response = bot.execute(new EditMessageReplyMarkup("AgAAAPrwAQCj_Q4D2s-51_8jsuU").replyMarkup(gameKeyboard));
-    //        if (!response.isOk()) {
-    //            assertEquals(400, response.errorCode());
-    //            assertEquals("Bad Request: MESSAGE_ID_INVALID", response.description());
-    //        }
-    //    }
-
-// @Test
-//    public void handleInitConversationForExistingUser() {
-//        InlineKeyboardMarkup expectedKbMarkup = new InlineKeyboardMarkup();
-//
-//        when(customerService.isPresent(expectedChatId)).thenReturn(true);
-//
-//        Update update = getUpdateFromResourceFile("text_update.json", COMMON_INFO_FIELD);
-//        appLogicService.initConversation(update.message().chat().id());
-//
-//        ArgumentCaptor<Long> argumentCaptor1 = ArgumentCaptor.forClass(Long.class);
-//        ArgumentCaptor<String> argumentCaptor2 = ArgumentCaptor.forClass(String.class);
-//        ArgumentCaptor<Keyboard> argumentCaptor3 = ArgumentCaptor.forClass(Keyboard.class);
-//
-//        Mockito.verify(msgService).sendMsg(argumentCaptor1.capture(), argumentCaptor2.capture(), argumentCaptor3.capture());
-//
-//        Long actualArgument1 = argumentCaptor1.getValue();
-//        String actualArgument2 = argumentCaptor2.getValue();
-//        Keyboard actualArgument3 = argumentCaptor3.getValue();
-//
-//        Assertions.assertThat(actualArgument1).isEqualTo(expectedChatId);
-//        Assertions.assertThat(actualArgument2).isEqualTo(SHELTER_CHOOSE_MSG);
-//        Assertions.assertThat(actualArgument3).isEqualTo(expectedKbMarkup);
-//    }
-
-
-
-//    @BeforeEach
-//    public void setUp() {
-//        MockitoAnnotations.openMocks(this);
-//        listener = new TelegramBotUpdatesListener(telegramBot, menuService, userService, checkService, userRepository, dogService, catService, reportDataService, imageService, imageRepository);
-//    }
-
-
-
-//    @Test
-//    public void testProcess() {
-//        Update update1 = mock(Update.class);
-//        Update update2 = mock(Update.class);
-//        List<Update> updates = new ArrayList<>();
-//        updates.add(update1);
-//        updates.add(update2);
-//
-//        Message message1 = mock(Message.class);
-//        Message message2 = mock(Message.class);
-//
-//        when(update1.message()).thenReturn(message1);
-//        when(update2.message()).thenReturn(message2);
-//
-//        when(checkService.hasMessage(update1)).thenReturn(true);
-//        when(checkService.hasMessage(update2)).thenReturn(true);
-//
-//        when(checkService.hasText(update1)).thenReturn(true);
-//        when(checkService.hasText(update2)).thenReturn(false);
-//
-//        when(message1.text()).thenReturn("START");
-//
-//        when(checkService.hasContact(update1)).thenReturn(false);
-//        when(checkService.hasContact(update2)).thenReturn(true);
-//
-//        Collection<User> emptyCollection = new ArrayList<>();
-//        when(userRepository.findUserByRole(Role.ROLE_USER)).thenReturn(emptyCollection);
-//        when(userRepository.findUserByRole(Role.ROLE_VOLUNTEER)).thenReturn(emptyCollection);
-//        SendMessage SendMessage = mock(com.pengrad.telegrambot.request.SendMessage.class);
-////        when(menuService.loadingTheMenuSubscribe(update1, SUBSCRIBE_TO_BOT_MESSAGE)).thenReturn(SendMessage);
-//        listener.process(updates);
-//
-////        ReplyKeyboardMarkup replyKeyboardMarkup = mock(ReplyKeyboardMarkup.class);
-////        verify(menuService).loadingTheMenuSubscribe(update1, "Подписаться");
-//        verify(userService).saveUser(any(User.class), eq(update2));
-//
-//        verifyNoMoreInteractions(menuService, userService);
-//
-//        Update update = mock(Update.class);
-//        Message message = mock(Message.class);
-//        CallbackQuery callbackQuery = mock(CallbackQuery.class);
-//        Chat chat = mock(Chat.class);
-//        when(update.message()).thenReturn(message);
-//        when(update.callbackQuery()).thenReturn(callbackQuery);
-//        when(callbackQuery.data()).thenReturn(DOG);
-//        menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU);
-//        verify(telegramBot).execute(any(SendMessage.class));
-//        verify(menuService).loadingTheMenuCallbackQuery(eq(update), eq(DOG_MESSAGE), eq(MAIN_DOG_MENU));
-//    }
-//
 
 }
