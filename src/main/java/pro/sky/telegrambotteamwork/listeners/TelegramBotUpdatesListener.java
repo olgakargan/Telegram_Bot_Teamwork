@@ -82,6 +82,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
                             telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
+////                            telegramBot.execute(new SendMessage(update.message().chat().id(), "dfsdfs"));
                         } else {
                             addReportDataMenu(update);
                         }
@@ -116,6 +117,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
                             telegramBot.execute(menuService.loadingTheMenu(messageUser, WELCOME_VOLUNTEER_MESSAGE, MAIN_VOLUNTEER_MENU));
+//                            telegramBot.execute(new SendMessage(update.message().chat().id(), "dfsdfs"));
                         } else {
                             addDogMenu(update);
                             addCatMenu(update);
