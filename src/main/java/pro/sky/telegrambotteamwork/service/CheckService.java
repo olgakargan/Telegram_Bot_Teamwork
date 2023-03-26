@@ -1,6 +1,5 @@
 package pro.sky.telegrambotteamwork.service;
 
-
 import com.pengrad.telegrambot.model.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,5 +76,16 @@ public class CheckService {
     public boolean hasPhoto(Update update) {
         logger.info("Вызван метод проверки наличия изображения от пользователя");
         return update.message().photo() != null;
+    }
+
+    /**
+     * Этот метод проверяет, есть ли подпись под фотографией от пользователя
+     *
+     * @param update входящее обновление
+     * @return Возвращает true, если есть подпись под фотографией от пользователя
+     */
+    public boolean hasCaption(Update update) {
+        logger.info("Вызван метод проверки наличия подписи по фотографией от пользователя");
+        return update.message().caption() != null;
     }
 }

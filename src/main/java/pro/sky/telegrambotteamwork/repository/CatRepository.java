@@ -9,7 +9,4 @@ import pro.sky.telegrambotteamwork.model.Cat;
  */
 @Repository
 public interface CatRepository extends JpaRepository<Cat, Long> {
-
 }
-
-

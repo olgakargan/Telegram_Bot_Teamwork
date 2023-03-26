@@ -1,5 +1,6 @@
 package pro.sky.telegrambotteamwork.controller;
 
+
 import com.pengrad.telegrambot.TelegramBot;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -67,6 +68,19 @@ public class DogControllerTests {
         Assertions.assertThat(findResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
+    @Test
+    public void deleteDogTest() {
+        Dog dog = new Dog(1L, "Алекс", "Немецкая овчарка", 2, "Описание");
+        ResponseEntity<Dog> response = formingUrl(constructionUriBuilderCreation().build().toUri(), dog);
+        checkingTheDogsForCreation(dog, response);
+        Dog deleteDog = response.getBody();
+        ResponseEntity<Dog> deleteResponse = restTemplate.getForEntity("http://localhost:" + port + "/api/dog/" + deleteDog.getId(), Dog.class);
+
+        Assertions.assertThat(deleteResponse.getBody()).isNotNull();
+        Assertions.assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(deleteResponse.getBody()).isEqualTo(deleteDog);
+    }
+
     private ResponseEntity<Dog> formingUrl(URI uri, Dog dog) {
         return restTemplate.postForEntity(uri, dog, Dog.class);
     }
@@ -86,6 +100,4 @@ public class DogControllerTests {
         Assertions.assertThat(response.getBody().getId()).isEqualTo(dog.getId());
     }
 
-
 }
-

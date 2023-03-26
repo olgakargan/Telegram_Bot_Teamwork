@@ -60,8 +60,8 @@ public class KeyboardMessageUserConstant {
     public static final String SEND_REPORT_CAT = "Прислать отчет";
     public static final String GO_BACK_PET_REPORT_CAT = "Beрнуться назад";
     // Кнопки о волонтере
-    public static final String QUESTION_TO_VOLUNTEER_DOG = "Вопрос волонтеру";
-    public static final String BECOME_A_VOLUNTEER_DOG = "Стать волонтером";
+    public static final String QUESTION_TO_VOLUNTEER_DOG = "Вопрос вoлонтеру";
+    public static final String BECOME_A_VOLUNTEER_DOG = "Стать вoлонтером";
     public static final String GO_BACK_CALL_A_VOLUNTEER_DOG = "Beрнуться нaзaд";
     public static final String QUESTION_TO_VOLUNTEER_CAT = "Вопрос волонтеру";
     public static final String BECOME_A_VOLUNTEER_CAT = "Стать волонтером";

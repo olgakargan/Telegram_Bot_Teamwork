@@ -1,18 +1,5 @@
 package pro.sky.telegrambotteamwork.service;
 
-
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.SendMessage;
-import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
-import pro.sky.telegrambotteamwork.enums.Role;
-import pro.sky.telegrambotteamwork.model.User;
-import pro.sky.telegrambotteamwork.repository.UserRepository;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -29,8 +16,7 @@ import pro.sky.telegrambotteamwork.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.ARE_YOU_VOLUNTEER;
-import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.YOU_HAVE_SUBSCRIBED;
+import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.*;
 
 /**
  * Серивис-класс для всех пользователей ботом
@@ -135,5 +121,11 @@ public class UserService {
         return user;
     }
 
-}
+    public void findUserByRoleVolunteer(Update update, Long chatId, String message) {
+        Collection<User> users = userRepository.findUserByRole(Role.ROLE_VOLUNTEER);
+        for (User user : users) {
+            telegramBot.execute(new SendMessage(chatId, RESPONSE_TO_VOLUNTEER_FROM_USER_MESSAGE + update.message().from().username() + RESPONSE_TO_VOLUNTEER_FROM_USER_MESSAGE_2 + message));
+        }
+    }
 
+}

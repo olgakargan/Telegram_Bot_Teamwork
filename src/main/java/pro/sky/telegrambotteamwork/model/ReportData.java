@@ -5,11 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @Table(name = "reports_data")
-@Entity
 @AllArgsConstructor
+@Entity
 @NoArgsConstructor
 public class ReportData {
     @Id
@@ -26,9 +27,8 @@ public class ReportData {
     private String habits;
     @Column(name = "days")
     private Integer day;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "image_id")
-    private Image image;
+    @Column(name = "date_and_time")
+    private LocalDateTime dateTime;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "report_data_id")
     private User user;

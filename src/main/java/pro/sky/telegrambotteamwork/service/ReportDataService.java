@@ -1,7 +1,9 @@
 package pro.sky.telegrambotteamwork.service;
 
 
+import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +13,12 @@ import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.model.ReportData;
 import pro.sky.telegrambotteamwork.repository.ReportDataRepository;
 
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESSAGE_AFTER_ADDING_REPORT_DATA;
+import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESSAGE_AFTER_ADDING_REPORT_DATA_2;
 
 /**
  * Сервис-класс для манипуляций с отчетами от пользователя
@@ -22,6 +28,7 @@ import java.util.regex.Pattern;
 public class ReportDataService {
     private final Logger logger = LoggerFactory.getLogger(ReportDataService.class);
     private final ReportDataRepository reportDataRepository;
+    private final TelegramBot telegramBot;
     private static final Pattern PATTERN = Pattern.compile("([\\W+]+)(\\#)([\\W+]+)(\\#)([\\W+]+)(\\#)([0-9]{1,})");
 
     /**
@@ -82,12 +89,15 @@ public class ReportDataService {
             String habits = matcher.group(5);
             String dayString = matcher.group(7);
             Integer day = Integer.parseInt(dayString);
+            LocalDateTime dateTime = LocalDateTime.now();
             reportData.setChatId(chatId);
             reportData.setRation(ration);
             reportData.setHealth(health);
             reportData.setHabits(habits);
             reportData.setDay(day);
+            reportData.setDateTime(dateTime);
             reportDataRepository.save(reportData);
+            telegramBot.execute(new SendMessage(update.message().chat().id(), MESSAGE_AFTER_ADDING_REPORT_DATA + reportData.getId() + MESSAGE_AFTER_ADDING_REPORT_DATA_2));
             logger.info("Отчет о питомце сохранен в базу: " + reportData);
         }
     }
