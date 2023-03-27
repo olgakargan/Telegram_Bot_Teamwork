@@ -35,7 +35,7 @@ public class CatControllerTests {
 
     @Test
     public void findCatTest() {
-        Cat cat = new Cat(1L, "Алекс", "Британский", 2, "Описание");
+        Cat cat = new Cat(1L, "Арчи", "Шотландский", 2, "Описание");
         ResponseEntity<Cat> response = formingUrl(constructionUriBuilderCreation().build().toUri(), cat);
         checkingTheCatsForCreation(cat, response);
         Cat findCat = response.getBody();
