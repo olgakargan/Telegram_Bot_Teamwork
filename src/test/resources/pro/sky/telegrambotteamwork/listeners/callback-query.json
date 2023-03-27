@@ -1,14 +1,3 @@
-//{
-//  "callback_query": {
-//    "data": "%command%",
-//    "message": {
-//      "chat": {
-//        "id": 1
-//      }
-//    }
-//  }
-//}
-
 {
   "callback_query": {
     "id": 123,

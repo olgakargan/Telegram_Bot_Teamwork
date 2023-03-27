@@ -78,9 +78,13 @@ public class DogService {
      * @param id идентификатор собаки
      */
     @CacheEvict("dogs")
-    public void deleteDog(Long id) {
+    public Dog deleteDog(Long id) {
         logger.info("Вызван метод удаления собаки по id: {}", id);
-        dogRepository.deleteById(id);
+        Dog dog = findDog(id);
+        if (dog != null) {
+            dogRepository.delete(dog);
+        }
+        return dog;
     }
 
     /**

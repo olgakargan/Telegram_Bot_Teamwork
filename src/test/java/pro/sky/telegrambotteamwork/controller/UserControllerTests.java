@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import pro.sky.telegrambotteamwork.model.User;
 
 import java.net.URI;
+import java.util.ArrayList;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -36,12 +37,26 @@ public class UserControllerTests {
     @Test
     public void findUserTest() {
         User user = new User(1L, "Иван", "Иванов", "@ivanIvanov", 123456789L, 987654321L);
+        user.setReportDataset(new ArrayList<>());
         ResponseEntity<User> response = formingUrl(constructionUriBuilderCreation().build().toUri(), user);
         checkingTheUsersForCreation(user, response);
         User findUser = response.getBody();
         ResponseEntity<User> findResponse = restTemplate.getForEntity("http://localhost:" + port + "/api/user/" + findUser.getId(), User.class);
         Assertions.assertThat(findResponse.getBody()).isEqualTo(findUser);
         Assertions.assertThat(findResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void deleteUserTest() {
+        User user = new User(1L, "Иван", "Иванов", "@ivanIvanov", 123456789L, 987654321L);
+        user.setReportDataset(new ArrayList<>());
+        ResponseEntity<User> response = formingUrl(constructionUriBuilderCreation().build().toUri(), user);
+        checkingTheUsersForCreation(user, response);
+        User deleteUser = response.getBody();
+        ResponseEntity<User> deleteResponse = restTemplate.getForEntity("http://localhost:" + port + "/api/user/" + deleteUser.getId(), User.class);
+        Assertions.assertThat(deleteResponse.getBody()).isNotNull();
+        Assertions.assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(deleteResponse.getBody()).isEqualTo(deleteUser);
     }
 
     private ResponseEntity<User> formingUrl(URI uri, User user) {
