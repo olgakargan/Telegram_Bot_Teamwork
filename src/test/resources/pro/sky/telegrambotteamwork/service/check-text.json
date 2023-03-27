@@ -1,8 +1,5 @@
 {
   "message": {
-    "chat": {
-      "id": "12345"
-    },
     "text": "%command%"
   }
 }

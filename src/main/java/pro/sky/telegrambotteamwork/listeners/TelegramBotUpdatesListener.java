@@ -82,6 +82,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
                             telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
+////                            telegramBot.execute(new SendMessage(update.message().chat().id(), "dfsdfs"));
                         } else {
                             addReportDataMenu(update);
                         }
@@ -116,6 +117,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
                             telegramBot.execute(menuService.loadingTheMenu(messageUser, WELCOME_VOLUNTEER_MESSAGE, MAIN_VOLUNTEER_MENU));
+//                            telegramBot.execute(new SendMessage(update.message().chat().id(), "dfsdfs"));
                         } else {
                             addDogMenu(update);
                             addCatMenu(update);
@@ -388,7 +390,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_DOG_PREVIEW_2_MESSAGE));
         } else if (ADD_DOG_BD_COMMAND.equals(update.message().text())) {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_DOG_MESSAGE));
-        } else {
+        } else if (!(ADD_CAT_COMMAND.equals(update.message().text())) && !((ADD_CAT_BD_COMMAND.equals(update.message().text())))) {
             dogService.saveDog(update);
         }
     }
@@ -403,7 +405,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_CAT_PREVIEW_2_MESSAGE));
         } else if (ADD_CAT_BD_COMMAND.equals(update.message().text())) {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_CAT_MESSAGE));
-        } else {
+        } else if (!(ADD_DOG_COMMAND.equals(update.message().text())) && !((ADD_DOG_BD_COMMAND.equals(update.message().text())))) {
             catService.saveCat(update);
         }
     }

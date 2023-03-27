@@ -34,6 +34,17 @@ public class CatControllerTests {
     }
 
     @Test
+    public void findCatTest() {
+        Cat cat = new Cat(1L, "Арчи", "Шотландский", 2, "Описание");
+        ResponseEntity<Cat> response = formingUrl(constructionUriBuilderCreation().build().toUri(), cat);
+        checkingTheCatsForCreation(cat, response);
+        Cat findCat = response.getBody();
+        ResponseEntity<Cat> findResponse = restTemplate.getForEntity("http://localhost:" + port + "/api/cat/" + findCat.getId(), Cat.class);
+        Assertions.assertThat(findResponse.getBody()).isEqualTo(findCat);
+        Assertions.assertThat(findResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
     public void updateCatTest() {
         Cat cat = new Cat(1L, "Алекс", "Британский", 2, "Описание");
         ResponseEntity<Cat> response = formingUrl(constructionUriBuilderCreation().build().toUri(), cat);
@@ -56,14 +67,16 @@ public class CatControllerTests {
     }
 
     @Test
-    public void findCatTest() {
-        Cat cat = new Cat(1L, "Алекс", "Британский", 2, "Описание");
+    public void deleteCatTest() {
+        Cat cat = new Cat(1L, "Арчи", "Шотландский", 2, "Описание");
         ResponseEntity<Cat> response = formingUrl(constructionUriBuilderCreation().build().toUri(), cat);
         checkingTheCatsForCreation(cat, response);
-        Cat findCat = response.getBody();
-        ResponseEntity<Cat> findResponse = restTemplate.getForEntity("http://localhost:" + port + "/api/cat/" + findCat.getId(), Cat.class);
-        Assertions.assertThat(findResponse.getBody()).isEqualTo(findCat);
-        Assertions.assertThat(findResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        Cat deleteCat = response.getBody();
+        ResponseEntity<Cat> deleteResponse = restTemplate.getForEntity("http://localhost:" + port + "/api/cat/" + deleteCat.getId(), Cat.class);
+        Assertions.assertThat(deleteResponse.getBody()).isNotNull();
+        Assertions.assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(deleteResponse.getBody()).isEqualTo(deleteCat);
     }
 
     private ResponseEntity<Cat> formingUrl(URI uri, Cat cat) {

@@ -1,0 +1,16 @@
+{
+  "message": {
+    "contact": {
+      "first_name": "Иван",
+      "last_name": "Иванов",
+      "user_id": 12345,
+      "phoneNumber": "+790100000011"
+    },
+    "from": {
+      "username": "userName"
+    },
+    "chat": {
+      "id": 12345
+    }
+  }
+}

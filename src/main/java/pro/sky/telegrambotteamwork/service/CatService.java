@@ -79,9 +79,13 @@ public class CatService {
      * @param id идентификатор кошки
      */
     @CacheEvict("cats")
-    public void deleteCat(Long id) {
+    public Cat deleteCat(Long id) {
         logger.info("Вызван метод удаления кошки по id: {}", id);
-        catRepository.deleteById(id);
+        Cat cat = findCat(id);
+        if (cat != null) {
+            catRepository.delete(cat);
+        }
+        return cat;
     }
 
     /**

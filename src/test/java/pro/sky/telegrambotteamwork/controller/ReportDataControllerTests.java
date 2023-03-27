@@ -44,6 +44,19 @@ public class ReportDataControllerTests {
         Assertions.assertThat(findResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
+    @Test
+    public void deleteUserTest() {
+        ReportData reportData = new ReportData(1L, 123456789L, "Рацион питомца", "Здоровье питомца", "Привычки питомца", 1);
+
+        ResponseEntity<ReportData> response = formingUrl(constructionUriBuilderCreation().build().toUri(), reportData);
+        checkingTheReportsDataForCreation(reportData, response);
+        ReportData deleteReportData = response.getBody();
+        ResponseEntity<ReportData> deleteResponse = restTemplate.getForEntity("http://localhost:" + port + "/api/report-data/" + deleteReportData.getId(), ReportData.class);
+        Assertions.assertThat(deleteResponse.getBody()).isNotNull();
+        Assertions.assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        Assertions.assertThat(deleteResponse.getBody()).isEqualTo(deleteReportData);
+    }
+
     private ResponseEntity<ReportData> formingUrl(URI uri, ReportData reportData) {
         return restTemplate.postForEntity(uri, reportData, ReportData.class);
     }
