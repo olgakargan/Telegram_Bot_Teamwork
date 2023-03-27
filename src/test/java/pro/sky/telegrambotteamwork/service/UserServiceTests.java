@@ -1,5 +1,7 @@
 package pro.sky.telegrambotteamwork.service;
 
+import com.pengrad.telegrambot.BotUtils;
+import com.pengrad.telegrambot.model.Update;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +12,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import pro.sky.telegrambotteamwork.model.User;
 import pro.sky.telegrambotteamwork.repository.UserRepository;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -72,5 +78,23 @@ public class UserServiceTests {
         Assertions.assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> userService.findUser(TEST_ID_2));
 
+    }
+
+    @Test
+    public void saveUserTest() throws URISyntaxException, IOException {
+        String json = Files.readString(Paths.get(UserServiceTests.class.getResource("save-user.json").toURI()));
+        Update update = getUpdate(json);
+        User user = new User(1L, "Иван", "Иванов", "userName", 12345L, 12345L);
+
+        assertNotNull(userRepository);
+        Assertions.assertThat(user.getFirstName()).isEqualTo(update.message().contact().firstName());
+        Assertions.assertThat(user.getLastName()).isEqualTo(update.message().contact().lastName());
+        Assertions.assertThat(user.getUserName()).isEqualTo(update.message().from().username());
+        Assertions.assertThat(user.getUserId()).isEqualTo(update.message().contact().userId());
+        Assertions.assertThat(user.getChatId()).isEqualTo(update.message().chat().id());
+    }
+
+    private Update getUpdate(String json) {
+        return BotUtils.fromJson(json, Update.class);
     }
 }
