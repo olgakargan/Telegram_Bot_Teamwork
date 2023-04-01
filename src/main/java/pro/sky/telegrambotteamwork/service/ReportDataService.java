@@ -64,9 +64,13 @@ public class ReportDataService {
      * @param id идентификатор отчета
      */
     @CacheEvict("reports")
-    public void deleteReportData(Long id) {
+    public ReportData deleteReportData(Long id) {
         logger.info("Вызван метод удаления отчета по id: {}", id);
-        reportDataRepository.deleteById(id);
+        ReportData reportData = findReportData(id);
+        if (reportData != null) {
+            reportDataRepository.delete(reportData);
+        }
+        return reportData;
     }
 
     /**

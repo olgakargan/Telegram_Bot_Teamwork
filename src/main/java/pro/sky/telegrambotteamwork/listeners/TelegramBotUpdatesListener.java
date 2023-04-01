@@ -389,7 +389,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_DOG_PREVIEW_2_MESSAGE));
         } else if (ADD_DOG_BD_COMMAND.equals(update.message().text())) {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_DOG_MESSAGE));
-        } else {
+        } else if (!(ADD_CAT_COMMAND.equals(update.message().text())) && !((ADD_CAT_BD_COMMAND.equals(update.message().text())))) {
             dogService.saveDog(update);
         }
     }
@@ -404,7 +404,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_CAT_PREVIEW_2_MESSAGE));
         } else if (ADD_CAT_BD_COMMAND.equals(update.message().text())) {
             telegramBot.execute(new SendMessage(update.message().chat().id(), ADD_CAT_MESSAGE));
-        } else {
+        } else if (!(ADD_DOG_COMMAND.equals(update.message().text())) && !((ADD_DOG_BD_COMMAND.equals(update.message().text())))) {
             catService.saveCat(update);
         }
     }

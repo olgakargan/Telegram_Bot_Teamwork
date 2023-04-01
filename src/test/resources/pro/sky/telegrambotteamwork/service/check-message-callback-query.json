@@ -1,0 +1,7 @@
+{
+  "callback_query": {
+    "message": {
+      "text": "%command%"
+    }
+  }
+}

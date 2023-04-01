@@ -37,6 +37,7 @@ public class UserControllerTests {
     @Test
     public void findUserTest() {
         User user = new User(1L, "Иван", "Иванов", "@ivanIvanov", 123456789L, 987654321L);
+        user.setReportDataset(new ArrayList<>());
         ResponseEntity<User> response = formingUrl(constructionUriBuilderCreation().build().toUri(), user);
         checkingTheUsersForCreation(user, response);
         User findUser = response.getBody();
@@ -51,10 +52,8 @@ public class UserControllerTests {
         user.setReportDataset(new ArrayList<>());
         ResponseEntity<User> response = formingUrl(constructionUriBuilderCreation().build().toUri(), user);
         checkingTheUsersForCreation(user, response);
-
         User deleteUser = response.getBody();
         ResponseEntity<User> deleteResponse = restTemplate.getForEntity("http://localhost:" + port + "/api/user/" + deleteUser.getId(), User.class);
-
         Assertions.assertThat(deleteResponse.getBody()).isNotNull();
         Assertions.assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(deleteResponse.getBody()).isEqualTo(deleteUser);
@@ -78,6 +77,4 @@ public class UserControllerTests {
         Assertions.assertThat(response.getBody().getId()).isNotNull();
         Assertions.assertThat(response.getBody().getId()).isEqualTo(user.getId());
     }
-
-
 }

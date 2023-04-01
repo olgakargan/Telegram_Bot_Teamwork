@@ -14,8 +14,7 @@ import pro.sky.telegrambotteamwork.repository.ReportDataRepository;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ReportDataServiceTests {
@@ -48,6 +47,14 @@ public class ReportDataServiceTests {
 
         Mockito.when(reportDataRepository.findById(TEST_ID)).thenReturn(Optional.of(reportData));
         Assertions.assertThat(reportData).isEqualTo(reportDataService.findReportData(TEST_ID));
+        ReportData actual = reportDataService.findReportData(TEST_ID);
+
+        Assertions.assertThat(actual.getId()).isEqualTo(reportData.getId());
+        Assertions.assertThat(actual.getChatId()).isEqualTo(reportData.getChatId());
+        Assertions.assertThat(actual.getRation()).isEqualTo(reportData.getRation());
+        Assertions.assertThat(actual.getHealth()).isEqualTo(reportData.getHealth());
+        Assertions.assertThat(actual.getHabits()).isEqualTo(reportData.getHabits());
+        Assertions.assertThat(actual.getDay()).isEqualTo(reportData.getDay());
         Assertions.assertThatExceptionOfType(NullPointerException.class)
                 .isThrownBy(() -> reportDataService.findReportData(TEST_ID_2));
     }
@@ -55,10 +62,16 @@ public class ReportDataServiceTests {
     @Test
     public void deleteReportDataTest() {
         assertNotNull(reportDataRepository);
-        Mockito.when(reportDataRepository.save(reportData)).thenReturn(reportData);
-        Mockito.when(reportDataRepository.findById(TEST_ID)).thenReturn(Optional.of(reportData));
 
-        verify(reportDataRepository, atLeastOnce()).deleteById(TEST_ID);
+        Mockito.when(reportDataRepository.findById(TEST_ID)).thenReturn(Optional.of(reportData));
+        ReportData expected = reportDataService.deleteReportData(TEST_ID);
+        ReportData actual = reportDataService.deleteReportData(TEST_ID);
+        Assertions.assertThat(actual).isEqualTo(expected);
+        when(reportDataRepository.findById(TEST_ID)).thenReturn(Optional.of(reportData));
+        expected = reportData;
+        actual = reportDataService.deleteReportData(TEST_ID);
+        Assertions.assertThat(actual).isEqualTo(expected);
+
 
     }
 }
