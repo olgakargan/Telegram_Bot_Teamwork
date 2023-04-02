@@ -28,14 +28,14 @@ public class ReportDataControllerTests {
 
     @Test
     public void addReportDataTest() {
-        ReportData reportData = new ReportData(1L, 123456789L, "Рацион питомца", "Здоровье питомца", "Привычки питомца", 1);
+        ReportData reportData = new ReportData(123456789L, "Рацион питомца", "Здоровье питомца", "Привычки питомца", 1);
         ResponseEntity<ReportData> response = formingUrl(constructionUriBuilderCreation().build().toUri(), reportData);
         checkingTheReportsDataForCreation(reportData, response);
     }
 
     @Test
     public void findReportDataTest() {
-        ReportData reportData = new ReportData(1L, 123456789L, "Рацион питомца", "Здоровье питомца", "Привычки питомца", 1);
+        ReportData reportData = new ReportData(123456789L, "Рацион питомца", "Здоровье питомца", "Привычки питомца", 1);
         ResponseEntity<ReportData> response = formingUrl(constructionUriBuilderCreation().build().toUri(), reportData);
         checkingTheReportsDataForCreation(reportData, response);
         ReportData findReportData = response.getBody();
@@ -46,7 +46,7 @@ public class ReportDataControllerTests {
 
     @Test
     public void deleteUserTest() {
-        ReportData reportData = new ReportData(1L, 123456789L, "Рацион питомца", "Здоровье питомца", "Привычки питомца", 1);
+        ReportData reportData = new ReportData(123456789L, "Рацион питомца", "Здоровье питомца", "Привычки питомца", 1);
 
         ResponseEntity<ReportData> response = formingUrl(constructionUriBuilderCreation().build().toUri(), reportData);
         checkingTheReportsDataForCreation(reportData, response);
@@ -73,6 +73,5 @@ public class ReportDataControllerTests {
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isNotNull();
         Assertions.assertThat(response.getBody().getId()).isNotNull();
-        Assertions.assertThat(response.getBody().getId()).isEqualTo(reportData.getId());
     }
 }

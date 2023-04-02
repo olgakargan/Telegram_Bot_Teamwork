@@ -1,4 +1,5 @@
 package pro.sky.telegrambotteamwork.constants;
+
 import static pro.sky.telegrambotteamwork.constants.CommandMessageUserConstant.*;
 
 public class TextMessageUserConstant {
@@ -71,4 +72,5 @@ public class TextMessageUserConstant {
     public static final String MESSAGE_AFTER_ADDING_REPORT_DATA = "Вы отправили отчет на проверку. Отлично! Теперь вам нужно отправить фотографию вашего питомца. Для этого запомните номер вашего отчета - ";
     public static final String MESSAGE_AFTER_ADDING_REPORT_DATA_2 = ". Для того, чтобы отправить фотографию вашего питомца, введите номер вашего отчета и приложите фотографию. Затем нажмите отправить.";
     public static final String MESSAGE_AFTER_SENDING_PHOTO = "Вы полностью отправили отчет на проверку волонтеру! Для продолжения работы, отправьте команду " + START;
+    public static final String ERROR_SEND_REPORT_DATA_MESSAGE = "Такого пользователя не существует! Попробуйте зарегистрироваться.";
 }

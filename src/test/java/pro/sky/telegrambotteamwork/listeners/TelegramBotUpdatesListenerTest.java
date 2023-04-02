@@ -1,5 +1,6 @@
 package pro.sky.telegrambotteamwork.listeners;
 
+
 import com.pengrad.telegrambot.BotUtils;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
@@ -70,7 +71,7 @@ public class TelegramBotUpdatesListenerTest {
     public void startTestWhenUserVolunteer() throws URISyntaxException, IOException {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("mocks_for_updates.json").toURI()));
         Update update = getUpdate(jsonUpdates, START);
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         Collection<User> rolesVolunteer = new ArrayList<>();
         rolesVolunteer.add(user);
@@ -91,7 +92,7 @@ public class TelegramBotUpdatesListenerTest {
     public void startTestWhenUserNotVolunteer() throws URISyntaxException, IOException {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("mocks_for_updates.json").toURI()));
         Update update = getUpdate(jsonUpdates, START);
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         rolesUser.add(user);
         Collection<User> rolesVolunteer = new ArrayList<>();
@@ -130,7 +131,7 @@ public class TelegramBotUpdatesListenerTest {
 
         Update update = getUpdate(jsonUpdates, START);
 
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         rolesUser.add(user);
         Collection<User> rolesVolunteer = new ArrayList<>();
@@ -153,7 +154,7 @@ public class TelegramBotUpdatesListenerTest {
     public void testUserAddingReportMenu() throws URISyntaxException, IOException {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("mocks_for_updates.json").toURI()));
         Update update = getUpdate(jsonUpdates, ADD_REPORT_DATA_COMMAND);
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         rolesUser.add(user);
         Collection<User> rolesVolunteer = new ArrayList<>();
@@ -175,7 +176,7 @@ public class TelegramBotUpdatesListenerTest {
     public void testUserAddingReportMenuDB() throws URISyntaxException, IOException {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("mocks_for_updates.json").toURI()));
         Update update = getUpdate(jsonUpdates, ADD_REPORT_DATA_BD_COMMAND);
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         rolesUser.add(user);
         Collection<User> rolesVolunteer = new ArrayList<>();
@@ -198,7 +199,7 @@ public class TelegramBotUpdatesListenerTest {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("callback-query.json").toURI()));
         Update update = getUpdate(jsonUpdates, DOG);
 
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         rolesUser.add(user);
         Collection<User> rolesVolunteer = new ArrayList<>();
@@ -219,7 +220,7 @@ public class TelegramBotUpdatesListenerTest {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("callback-query.json").toURI()));
         Update update = getUpdate(jsonUpdates, CAT);
 
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         rolesUser.add(user);
         Collection<User> rolesVolunteer = new ArrayList<>();
@@ -240,7 +241,7 @@ public class TelegramBotUpdatesListenerTest {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("callback-query.json").toURI()));
         Update update = getUpdate(jsonUpdates, ANOTHER_PET);
 
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         rolesUser.add(user);
         Collection<User> rolesVolunteer = new ArrayList<>();
@@ -265,7 +266,7 @@ public class TelegramBotUpdatesListenerTest {
         Update update3 = getUpdate(jsonUpdates, ADD_CAT_COMMAND);
         Update update4 = getUpdate(jsonUpdates, ADD_CAT_BD_COMMAND);
 
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         Collection<User> rolesVolunteer = new ArrayList<>();
         rolesVolunteer.add(user);
@@ -300,7 +301,7 @@ public class TelegramBotUpdatesListenerTest {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("callback-query.json").toURI()));
 
         Update update = getUpdate(jsonUpdates, INFORMATION_FOR_VOLUNTEER);
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         Collection<User> rolesVolunteer = new ArrayList<>();
         rolesVolunteer.add(user);
@@ -321,7 +322,7 @@ public class TelegramBotUpdatesListenerTest {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("callback-query.json").toURI()));
 
         Update update = getUpdate(jsonUpdates, ADD_A_PET);
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         Collection<User> rolesVolunteer = new ArrayList<>();
         rolesVolunteer.add(user);
@@ -342,7 +343,7 @@ public class TelegramBotUpdatesListenerTest {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("callback-query.json").toURI()));
 
         Update update = getUpdate(jsonUpdates, REPORTS_OF_ADOPTIVE_PARENTS);
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         Collection<User> rolesVolunteer = new ArrayList<>();
         rolesVolunteer.add(user);
@@ -363,7 +364,7 @@ public class TelegramBotUpdatesListenerTest {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("callback-query.json").toURI()));
 
         Update update = getUpdate(jsonUpdates, MAKE_A_VOLUNTEER);
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         Collection<User> rolesVolunteer = new ArrayList<>();
         rolesVolunteer.add(user);
@@ -384,7 +385,7 @@ public class TelegramBotUpdatesListenerTest {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("callback-query.json").toURI()));
 
         Update update = getUpdate(jsonUpdates, MEMO_FOR_A_VOLUNTEER);
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         Collection<User> rolesVolunteer = new ArrayList<>();
         rolesVolunteer.add(user);
@@ -405,7 +406,7 @@ public class TelegramBotUpdatesListenerTest {
         String jsonUpdates = Files.readString(Paths.get(TelegramBotUpdatesListenerTest.class.getResource("callback-query.json").toURI()));
 
         Update update = getUpdate(jsonUpdates, DUTIES_OF_VOLUNTEERS);
-        User user = new User(1L, "FirstName", "LastName", "userName", 22L, 111L);
+        User user = new User("FirstName", "LastName", "userName", 22L, 111L);
         Collection<User> rolesUser = new ArrayList<>();
         Collection<User> rolesVolunteer = new ArrayList<>();
         rolesVolunteer.add(user);

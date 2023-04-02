@@ -28,14 +28,14 @@ public class CatControllerTests {
 
     @Test
     public void addCatTest() {
-        Cat cat = new Cat(1L, "Алекс", "Британский", 2, "Описание");
+        Cat cat = new Cat("Алекс", "Британский", 2, "Описание");
         ResponseEntity<Cat> response = formingUrl(constructionUriBuilderCreation().build().toUri(), cat);
         checkingTheCatsForCreation(cat, response);
     }
 
     @Test
     public void findCatTest() {
-        Cat cat = new Cat(1L, "Арчи", "Шотландский", 2, "Описание");
+        Cat cat = new Cat("Арчи", "Шотландский", 2, "Описание");
         ResponseEntity<Cat> response = formingUrl(constructionUriBuilderCreation().build().toUri(), cat);
         checkingTheCatsForCreation(cat, response);
         Cat findCat = response.getBody();
@@ -46,7 +46,7 @@ public class CatControllerTests {
 
     @Test
     public void updateCatTest() {
-        Cat cat = new Cat(1L, "Алекс", "Британский", 2, "Описание");
+        Cat cat = new Cat("Алекс", "Британский", 2, "Описание");
         ResponseEntity<Cat> response = formingUrl(constructionUriBuilderCreation().build().toUri(), cat);
         checkingTheCatsForCreation(cat, response);
 
@@ -68,7 +68,7 @@ public class CatControllerTests {
 
     @Test
     public void deleteCatTest() {
-        Cat cat = new Cat(1L, "Арчи", "Шотландский", 2, "Описание");
+        Cat cat = new Cat("Арчи", "Шотландский", 2, "Описание");
         ResponseEntity<Cat> response = formingUrl(constructionUriBuilderCreation().build().toUri(), cat);
         checkingTheCatsForCreation(cat, response);
 
@@ -95,6 +95,5 @@ public class CatControllerTests {
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isNotNull();
         Assertions.assertThat(response.getBody().getId()).isNotNull();
-        Assertions.assertThat(response.getBody().getId()).isEqualTo(cat.getId());
     }
 }

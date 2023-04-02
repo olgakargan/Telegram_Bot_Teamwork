@@ -3,6 +3,7 @@ package pro.sky.telegrambotteamwork.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.SendPhoto;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +12,15 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.model.Cat;
+import pro.sky.telegrambotteamwork.model.Image;
 import pro.sky.telegrambotteamwork.repository.CatRepository;
+import pro.sky.telegrambotteamwork.repository.ImageRepository;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static pro.sky.telegrambotteamwork.constants.KeyboardMessageUserConstant.CAT_CATALOG;
 import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESSAGE_AFTER_ADDING_TEXT_CAT;
 import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESSAGE_AFTER_ADDING_TEXT_CAT_2;
 
@@ -28,6 +33,8 @@ import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESS
 public class CatService {
     private final Logger logger = LoggerFactory.getLogger(CatService.class);
     private final CatRepository catRepository;
+    private final ImageRepository imageRepository;
+    private final MenuService menuService;
     private final TelegramBot telegramBot;
     private static final Pattern PATTERN = Pattern.compile("([\\W+]+)(\\*)([\\W+]+)(\\*)([0-9]{4})(\\*)([\\W+]+)");
 
@@ -113,6 +120,25 @@ public class CatService {
             catRepository.save(cat);
             telegramBot.execute(new SendMessage(update.message().chat().id(), MESSAGE_AFTER_ADDING_TEXT_CAT + cat.getId() + MESSAGE_AFTER_ADDING_TEXT_CAT_2));
             logger.info("Новый профиль кошки/кота сохранен: " + cat);
+        }
+    }
+
+    /**
+     * Этот метод выводит список имеющихся в базе кошек, которых можно приютить
+     *
+     * @param update входящее обновление
+     */
+    public void findAllImagesAndDescriptionCats(Update update) {
+        List<Image> images = imageRepository.findAll();
+
+        for (int i = 0; i < images.size(); i++) {
+            if (images.get(i).getCat() != null && CAT_CATALOG.equals(update.callbackQuery().data())) {
+                telegramBot.execute(new SendPhoto(update.callbackQuery().message().chat().id(), images.get(i).getBytes())
+                        .caption("Кличка: " + images.get(i).getCat().getCatName() +
+                                "\nПорода: " + images.get(i).getCat().getBreed() +
+                                "\nГод рождения: " + images.get(i).getCat().getYearOfBirth() +
+                                "\nКраткое описание: " + images.get(i).getCat().getDescription()));
+            }
         }
     }
 }

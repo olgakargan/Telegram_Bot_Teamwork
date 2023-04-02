@@ -32,4 +32,5 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
      * @return Возвращает найденный отчет
      */
     Optional<Image> findByReportDataId(Long reportDataId);
+
 }

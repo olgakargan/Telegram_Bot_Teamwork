@@ -3,6 +3,7 @@ package pro.sky.telegrambotteamwork.service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.SendPhoto;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +12,16 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.model.Dog;
+import pro.sky.telegrambotteamwork.model.Image;
 import pro.sky.telegrambotteamwork.repository.DogRepository;
+import pro.sky.telegrambotteamwork.repository.ImageRepository;
+import pro.sky.telegrambotteamwork.repository.UserRepository;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static pro.sky.telegrambotteamwork.constants.KeyboardMessageUserConstant.DOG_CATALOG;
 import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESSAGE_AFTER_ADDING_TEXT_DOG;
 import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESSAGE_AFTER_ADDING_TEXT_DOG_2;
 
@@ -27,6 +33,9 @@ import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESS
 public class DogService {
     private final Logger logger = LoggerFactory.getLogger(DogService.class);
     private final DogRepository dogRepository;
+    private final ImageRepository imageRepository;
+    private final MenuService menuService;
+    private final UserRepository userRepository;
     private final TelegramBot telegramBot;
     private static final Pattern PATTERN = Pattern.compile("([\\W+]+)(\\/)([\\W+]+)(\\/)([0-9]{4})(\\/)([\\W+]+)(\\/)([\\W+]+)");
 
@@ -114,6 +123,26 @@ public class DogService {
             dogRepository.save(dog);
             telegramBot.execute(new SendMessage(update.message().chat().id(), MESSAGE_AFTER_ADDING_TEXT_DOG + dog.getId() + MESSAGE_AFTER_ADDING_TEXT_DOG_2));
             logger.info("Новый профиль собаки сохранен: " + dog);
+        }
+    }
+
+    /**
+     * Этот метод выводит список имеющихся в базе собак, которых можно приютить
+     *
+     * @param update входящее обновление
+     */
+    public void findAllImagesAndDescriptionDogs(Update update) {
+        List<Image> images = imageRepository.findAll();
+
+        for (int i = 0; i < images.size(); i++) {
+            if (images.get(i).getDog() != null && DOG_CATALOG.equals(update.callbackQuery().data())) {
+                telegramBot.execute(new SendPhoto(update.callbackQuery().message().chat().id(), images.get(i).getBytes())
+                        .caption("Кличка: " + images.get(i).getDog().getDogName() +
+                                "\nПорода: " + images.get(i).getDog().getBreed() +
+                                "\nГод рождения: " + images.get(i).getDog().getYearOfBirth() +
+                                "\nПол: " + images.get(i).getDog().getFloor() +
+                                "\nКраткое описание: " + images.get(i).getDog().getDescription()));
+            }
         }
     }
 }

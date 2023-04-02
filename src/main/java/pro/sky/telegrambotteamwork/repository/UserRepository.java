@@ -1,5 +1,4 @@
 package pro.sky.telegrambotteamwork.repository;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,6 +7,7 @@ import pro.sky.telegrambotteamwork.enums.Role;
 import pro.sky.telegrambotteamwork.model.User;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Класс-репозиторий для работы с методами всех пользователей
@@ -22,6 +22,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     @Query(value = "SELECT * FROM users WHERE user_id = :userId", nativeQuery = true)
     Collection<User> findUserByUserId(@Param("userId") Long userId);
+
+    /**
+     * Этот метод ищет всех пользователей по идентификатору чата
+     *
+     * @param chatId идентификатор чата
+     * @return Возвращает пользователя с соответствующим идентификатором
+     */
+    Optional<User> findUserByChatId(Long chatId);
 
     /**
      * Этот метод ищет всех пользователей разделенных по ролям

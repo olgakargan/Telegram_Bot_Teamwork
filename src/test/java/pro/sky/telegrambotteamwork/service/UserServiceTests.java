@@ -1,5 +1,6 @@
 package pro.sky.telegrambotteamwork.service;
 
+
 import com.pengrad.telegrambot.BotUtils;
 import com.pengrad.telegrambot.model.Update;
 import org.assertj.core.api.Assertions;
@@ -34,7 +35,7 @@ public class UserServiceTests {
     private static final String TEST_USER_NAME = "ivanIvanov";
     private static final Long TEST_USER_ID = 12345L;
     private static final Long TEST_CHAT_ID = 67890L;
-    private final User TEST_USER = new User(TEST_ID, TEST_FIRST_NAME, TEST_LAST_NAME, TEST_USER_NAME, TEST_USER_ID, TEST_CHAT_ID);
+    private final User TEST_USER = new User(TEST_FIRST_NAME, TEST_LAST_NAME, TEST_USER_NAME, TEST_USER_ID, TEST_CHAT_ID);
 
 
     @Test
@@ -42,7 +43,6 @@ public class UserServiceTests {
         assertNotNull(userRepository);
 
         Mockito.when(userRepository.save(TEST_USER)).thenReturn(TEST_USER);
-        assertEquals(TEST_ID, TEST_USER.getId());
         assertEquals(TEST_FIRST_NAME, TEST_USER.getFirstName());
         assertEquals(TEST_LAST_NAME, TEST_USER.getLastName());
         assertEquals(TEST_USER_NAME, TEST_USER.getUserName());
@@ -84,7 +84,7 @@ public class UserServiceTests {
     public void saveUserTest() throws URISyntaxException, IOException {
         String json = Files.readString(Paths.get(UserServiceTests.class.getResource("save-user.json").toURI()));
         Update update = getUpdate(json);
-        User user = new User(1L, "Иван", "Иванов", "userName", 12345L, 12345L);
+        User user = new User("Иван", "Иванов", "userName", 12345L, 12345L);
 
         assertNotNull(userRepository);
         Assertions.assertThat(user.getFirstName()).isEqualTo(update.message().contact().firstName());

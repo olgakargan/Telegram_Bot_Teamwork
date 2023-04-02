@@ -29,14 +29,13 @@ public class DogServiceTests {
     public static final String TEST_BREED = "Немецкая овчарка";
     public static final int TEST_YEAR_OF_BIRTH = 2;
     public static final String TEST_DESCRIPTION = "Описание";
-    public static final Dog TEST_DOG = new Dog(TEST_ID, TEST_DOG_NAME, TEST_BREED, TEST_YEAR_OF_BIRTH, TEST_DESCRIPTION);
+    public static final Dog TEST_DOG = new Dog(TEST_DOG_NAME, TEST_BREED, TEST_YEAR_OF_BIRTH, TEST_DESCRIPTION);
 
     @Test
     public void addDogTest() {
         assertNotNull(dogRepository);
 
         Mockito.when(dogRepository.save(TEST_DOG)).thenReturn(TEST_DOG);
-        assertEquals(TEST_ID, TEST_DOG.getId());
         assertEquals(TEST_DOG_NAME, TEST_DOG.getDogName());
         assertEquals(TEST_BREED, TEST_DOG.getBreed());
         assertEquals(TEST_YEAR_OF_BIRTH, TEST_DOG.getYearOfBirth());
@@ -84,4 +83,5 @@ public class DogServiceTests {
         actual = dogService.deleteDog(TEST_ID);
         Assertions.assertThat(actual).isEqualTo(expected);
     }
+
 }

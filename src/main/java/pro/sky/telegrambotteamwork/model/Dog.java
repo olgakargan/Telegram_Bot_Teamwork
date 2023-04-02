@@ -1,6 +1,7 @@
 package pro.sky.telegrambotteamwork.model;
 
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,8 +33,7 @@ public class Dog {
     @Column(name = "description")
     private String description;
 
-    public Dog(Long id, String dogName, String breed, int yearOfBirth, String description) {
-        this.id = id;
+    public Dog(String dogName, String breed, int yearOfBirth, String description) {
         this.dogName = dogName;
         this.breed = breed;
         this.yearOfBirth = yearOfBirth;

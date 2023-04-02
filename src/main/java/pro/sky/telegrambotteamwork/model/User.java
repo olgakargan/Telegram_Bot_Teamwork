@@ -38,11 +38,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user")
     private Collection<ReportData> reportDataset;
 
-    public User(Long id, String firstName, String lastName, String userName, Long userId, Long chatId) {
-        this.id = id;
+    public User(String firstName, String lastName, String userName, Long userId, Long chatId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;

@@ -29,12 +29,11 @@ public class ReportData {
     private Integer day;
     @Column(name = "date_and_time")
     private LocalDateTime dateTime;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "report_data_id")
     private User user;
 
-    public ReportData(Long id, Long chatId, String ration, String health, String habits, Integer day) {
-        this.id = id;
+    public ReportData(Long chatId, String ration, String health, String habits, Integer day) {
         this.chatId = chatId;
         this.ration = ration;
         this.health = health;

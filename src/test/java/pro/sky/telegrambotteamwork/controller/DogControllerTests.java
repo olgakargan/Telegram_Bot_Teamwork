@@ -1,5 +1,4 @@
 package pro.sky.telegrambotteamwork.controller;
-
 import com.pengrad.telegrambot.TelegramBot;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,14 +28,14 @@ public class DogControllerTests {
 
     @Test
     public void addDogTest() {
-        Dog dog = new Dog(1L, "Алекс", "Немецкая овчарка", 2, "Описание");
+        Dog dog = new Dog("Алекс", "Немецкая овчарка", 2, "Описание");
         ResponseEntity<Dog> response = formingUrl(constructionUriBuilderCreation().build().toUri(), dog);
         checkingTheDogsForCreation(dog, response);
     }
 
     @Test
     public void updateDogTest() {
-        Dog dog = new Dog(1L, "Алекс", "Немецкая овчарка", 2, "Описание");
+        Dog dog = new Dog("Алекс", "Немецкая овчарка", 2, "Описание");
         ResponseEntity<Dog> response = formingUrl(constructionUriBuilderCreation().build().toUri(), dog);
         checkingTheDogsForCreation(dog, response);
 
@@ -58,7 +57,7 @@ public class DogControllerTests {
 
     @Test
     public void findDogTest() {
-        Dog dog = new Dog(1L, "Алекс", "Немецкая овчарка", 2, "Описание");
+        Dog dog = new Dog("Алекс", "Немецкая овчарка", 2, "Описание");
         ResponseEntity<Dog> response = formingUrl(constructionUriBuilderCreation().build().toUri(), dog);
         checkingTheDogsForCreation(dog, response);
         Dog findDog = response.getBody();
@@ -69,7 +68,7 @@ public class DogControllerTests {
 
     @Test
     public void deleteDogTest() {
-        Dog dog = new Dog(1L, "Арчи", "Кавказская овчарка", 2, "Описание");
+        Dog dog = new Dog("Арчи", "Кавказская овчарка", 2, "Описание");
         ResponseEntity<Dog> response = formingUrl(constructionUriBuilderCreation().build().toUri(), dog);
         checkingTheDogsForCreation(dog, response);
         Dog deleteDog = response.getBody();
@@ -95,7 +94,6 @@ public class DogControllerTests {
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isNotNull();
         Assertions.assertThat(response.getBody().getId()).isNotNull();
-        Assertions.assertThat(response.getBody().getId()).isEqualTo(dog.getId());
     }
 
 }

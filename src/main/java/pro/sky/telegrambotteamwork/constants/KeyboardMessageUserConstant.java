@@ -1,5 +1,6 @@
 package pro.sky.telegrambotteamwork.constants;
 
+
 import java.util.List;
 
 public class KeyboardMessageUserConstant {
@@ -93,6 +94,9 @@ public class KeyboardMessageUserConstant {
 
     // Кнопки создания волонтеров
     public static final String CHANGE_TO_VOLUNTEER = "Изменить на волонтера";
+    //Кнопки приютить собаку/кошку
+    public static final String SHELTER_A_DOG = "Приютить собаку ";
+    public static final String SHELTER_A_CAT = "Приютить кошку";
 
     // Списки кнопок. Меню для обычных пользователей
     public static final List<String> SUBSCRIPTION_MENU = List.of(
@@ -199,5 +203,11 @@ public class KeyboardMessageUserConstant {
     );
     public static final List<String> MAKE_A_VOLUNTEER_MENU = List.of(
             CHANGE_TO_VOLUNTEER
+    );
+    public static final List<String> SHELTER_A_DOG_MENU = List.of(
+            SHELTER_A_DOG
+    );
+    public static final List<String> SHELTER_A_CAT_MENU = List.of(
+            SHELTER_A_CAT
     );
 }

@@ -31,7 +31,7 @@ public class ReportDataServiceTests {
     private static final String TEST_HABITS = "Описание привычек животного";
     private static final Integer TEST_DAY = 2;
 
-    private final ReportData reportData = new ReportData(TEST_ID, TEST_CHAT_ID, TEST_RATION, TEST_HEALTH, TEST_HABITS, TEST_DAY);
+    private final ReportData reportData = new ReportData(TEST_CHAT_ID, TEST_RATION, TEST_HEALTH, TEST_HABITS, TEST_DAY);
 
     @Test
     public void addReportDataTest() {

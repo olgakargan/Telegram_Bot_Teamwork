@@ -11,14 +11,15 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import pro.sky.telegrambotteamwork.model.ReportData;
+import pro.sky.telegrambotteamwork.model.User;
 import pro.sky.telegrambotteamwork.repository.ReportDataRepository;
+import pro.sky.telegrambotteamwork.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESSAGE_AFTER_ADDING_REPORT_DATA;
-import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESSAGE_AFTER_ADDING_REPORT_DATA_2;
+import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.*;
 
 /**
  * Сервис-класс для манипуляций с отчетами от пользователя
@@ -28,6 +29,7 @@ import static pro.sky.telegrambotteamwork.constants.TextMessageUserConstant.MESS
 public class ReportDataService {
     private final Logger logger = LoggerFactory.getLogger(ReportDataService.class);
     private final ReportDataRepository reportDataRepository;
+    private final UserRepository userRepository;
     private final TelegramBot telegramBot;
     private static final Pattern PATTERN = Pattern.compile("([\\W+]+)(\\#)([\\W+]+)(\\#)([\\W+]+)(\\#)([0-9]{1,})");
 
@@ -84,6 +86,8 @@ public class ReportDataService {
      */
     public void saveReportData(Update update, String message) {
         Matcher matcher = PATTERN.matcher(message);
+        User user = userRepository.findUserByChatId(update.message().chat().id()).orElseThrow(() ->
+                new NullPointerException(ERROR_SEND_REPORT_DATA_MESSAGE));
 
         if (matcher.matches()) {
             ReportData reportData = new ReportData();
@@ -100,6 +104,7 @@ public class ReportDataService {
             reportData.setHabits(habits);
             reportData.setDay(day);
             reportData.setDateTime(dateTime);
+            reportData.setUser(user);
             reportDataRepository.save(reportData);
             telegramBot.execute(new SendMessage(update.message().chat().id(), MESSAGE_AFTER_ADDING_REPORT_DATA + reportData.getId() + MESSAGE_AFTER_ADDING_REPORT_DATA_2));
             logger.info("Отчет о питомце сохранен в базу: " + reportData);

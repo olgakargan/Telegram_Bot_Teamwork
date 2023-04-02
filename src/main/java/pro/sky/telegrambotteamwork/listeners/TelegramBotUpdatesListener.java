@@ -81,7 +81,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
                             telegramBot.execute(menuService.loadingTheMenuDogAndCat(update, WELCOME_MESSAGE, CHOOSING_PET_MENU));
-////                            telegramBot.execute(new SendMessage(update.message().chat().id(), "dfsdfs"));
                         } else {
                             addReportDataMenu(update);
                         }
@@ -91,7 +90,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         } else if (CAT.equals(update.callbackQuery().data())) {
                             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
                         } else if (ANOTHER_PET.equals(update.callbackQuery().data())) {
-                            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Информация о том, каких питомцев еще можно взять"));
+                            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Пока в нашем питомнике только кошки и собаки. Для продолжения введите команду " + START));
                         } else {
                             mainMenuDog(update);
                             informationMenuDog(update);
@@ -116,7 +115,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     if (checkService.hasMessage(update) && checkService.hasText(update)) {
                         if (START.equals(messageUser.text())) {
                             telegramBot.execute(menuService.loadingTheMenu(messageUser, WELCOME_VOLUNTEER_MESSAGE, MAIN_VOLUNTEER_MENU));
-//                            telegramBot.execute(new SendMessage(update.message().chat().id(), "dfsdfs"));
                         } else {
                             addDogMenu(update);
                             addCatMenu(update);
@@ -260,9 +258,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (DOG_TRANSFER_PROCEDURE.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), PET_TRANSFER_PROCEDURE_MESSAGE));
         } else if (DOG_CATALOG.equals(update.callbackQuery().data())) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Каталог собак"));
+            dogService.findAllImagesAndDescriptionDogs(update);
         } else if (GO_BACK_TAKE_A_FROM_A_SHELTER_DOG.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, DOG_MESSAGE, MAIN_DOG_MENU));
+        } else if (SHELTER_A_DOG.equals(update.callbackQuery().data())) {
+            dogService.findAllImagesAndDescriptionDogs(update);
         }
     }
 
@@ -281,7 +281,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else if (CAT_TRANSFER_PROCEDURE.equals(update.callbackQuery().data())) {
             telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), PET_TRANSFER_PROCEDURE_MESSAGE));
         } else if (CAT_CATALOG.equals(update.callbackQuery().data())) {
-            telegramBot.execute(new SendMessage(update.callbackQuery().message().chat().id(), "Каталог кошек"));
+            catService.findAllImagesAndDescriptionCats(update);
         } else if (GO_BACK_TAKE_A_FROM_A_SHELTER_CAT.equals(update.callbackQuery().data())) {
             telegramBot.execute(menuService.loadingTheMenuCallbackQuery(update, CAT_MESSAGE, MAIN_CAT_MENU));
         }
@@ -423,6 +423,5 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             reportDataService.saveReportData(update, update.message().text());
         }
     }
-
 
 }

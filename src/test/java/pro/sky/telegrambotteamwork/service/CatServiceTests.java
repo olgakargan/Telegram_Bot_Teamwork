@@ -29,14 +29,13 @@ public class CatServiceTests {
     public static final String TEST_BREED = "Британский";
     public static final int TEST_YEAR_OF_BIRTH = 2;
     public static final String TEST_DESCRIPTION = "Описание";
-    public static final Cat TEST_CAT = new Cat(TEST_ID, TEST_CAT_NAME, TEST_BREED, TEST_YEAR_OF_BIRTH, TEST_DESCRIPTION);
+    public static final Cat TEST_CAT = new Cat(TEST_CAT_NAME, TEST_BREED, TEST_YEAR_OF_BIRTH, TEST_DESCRIPTION);
 
     @Test
     public void addCatTest() {
         assertNotNull(catRepository);
 
         Mockito.when(catRepository.save(TEST_CAT)).thenReturn(TEST_CAT);
-        assertEquals(TEST_ID, TEST_CAT.getId());
         assertEquals(TEST_CAT_NAME, TEST_CAT.getCatName());
         assertEquals(TEST_BREED, TEST_CAT.getBreed());
         assertEquals(TEST_YEAR_OF_BIRTH, TEST_CAT.getYearOfBirth());

@@ -29,14 +29,14 @@ public class UserControllerTests {
 
     @Test
     public void addUserTest() {
-        User user = new User(1L, "Иван", "Иванов", "@ivanIvanov", 123456789L, 987654321L);
+        User user = new User("Иван", "Иванов", "@ivanIvanov", 123456789L, 987654321L);
         ResponseEntity<User> response = formingUrl(constructionUriBuilderCreation().build().toUri(), user);
         checkingTheUsersForCreation(user, response);
     }
 
     @Test
     public void findUserTest() {
-        User user = new User(1L, "Иван", "Иванов", "@ivanIvanov", 123456789L, 987654321L);
+        User user = new User("Иван", "Иванов", "@ivanIvanov", 123456789L, 987654321L);
         user.setReportDataset(new ArrayList<>());
         ResponseEntity<User> response = formingUrl(constructionUriBuilderCreation().build().toUri(), user);
         checkingTheUsersForCreation(user, response);
@@ -48,7 +48,7 @@ public class UserControllerTests {
 
     @Test
     public void deleteUserTest() {
-        User user = new User(1L, "Иван", "Иванов", "@ivanIvanov", 123456789L, 987654321L);
+        User user = new User("Иван", "Иванов", "@ivanIvanov", 123456789L, 987654321L);
         user.setReportDataset(new ArrayList<>());
         ResponseEntity<User> response = formingUrl(constructionUriBuilderCreation().build().toUri(), user);
         checkingTheUsersForCreation(user, response);
@@ -75,6 +75,5 @@ public class UserControllerTests {
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Assertions.assertThat(response.getBody()).isNotNull();
         Assertions.assertThat(response.getBody().getId()).isNotNull();
-        Assertions.assertThat(response.getBody().getId()).isEqualTo(user.getId());
     }
 }

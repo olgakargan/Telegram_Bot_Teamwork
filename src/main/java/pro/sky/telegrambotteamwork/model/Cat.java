@@ -26,8 +26,7 @@ public class Cat {
     @Column(name = "description")
     private String description;
 
-    public Cat(Long id, String catName, String breed, int yearOfBirth, String description, Object o) {
-        this.id = id;
+    public Cat(String catName, String breed, int yearOfBirth, String description) {
         this.catName = catName;
         this.breed = breed;
         this.yearOfBirth = yearOfBirth;
